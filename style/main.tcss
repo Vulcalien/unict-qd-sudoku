@@ -1,0 +1,25 @@
+#sudoku-grid {
+    layout: grid;
+    grid-size: 3 3;
+
+    height: 33;
+    width: 50%;
+
+    margin: 0 1;
+}
+
+.sudoku-3x3-block {
+    layout: grid;
+    grid-size: 3 3;
+
+    align: center middle;
+    border: solid white;
+}
+
+.sudoku-cell {
+    text-align: center;
+    border: solid lightgray;
+
+    height: 3;
+    width: 5;
+}
