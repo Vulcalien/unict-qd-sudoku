@@ -49,10 +49,10 @@ class Sudoku:
                 return False
 
         # check the block
-        block_x = x // self.block_size
-        block_y = y // self.block_size
-        for xi in range(block_x, block_x + self.block_size):
-            for yi in range(block_y, block_y + self.block_size):
+        block_x0 = (x // self.block_size) * self.block_size
+        block_y0 = (y // self.block_size) * self.block_size
+        for xi in range(block_x0, block_x0 + self.block_size):
+            for yi in range(block_y0, block_y0 + self.block_size):
                 if self.cells[xi][yi] == symbol:
                     return False
 
