@@ -31,12 +31,12 @@ class Sudoku:
         self.cells = generate_square_matrix(self.size, None)
         self.fixed = generate_square_matrix(self.size, False)
 
-    # returns True if 'val' can be placed in (x, y), False otherwise
-    def can_set(self, x, y, val):
+    # returns True if 'symbol' can be placed in (x, y), False otherwise
+    def can_set(self, x, y, symbol):
         # check if the input is valid
         if ((x < 0 or x >= self.size) or
             (y < 0 or y >= self.size) or
-            (val < 1 or val > self.size)):
+            (symbol < 1 or symbol > self.size)):
                return False
 
         # check if (x, y) is fixed
@@ -45,7 +45,7 @@ class Sudoku:
 
         # check the y-th row and x-th column
         for i in range(self.size):
-            if val in (self.cells[i][y], self.cells[x][i]):
+            if symbol in (self.cells[i][y], self.cells[x][i]):
                 return False
 
         # check the block
@@ -53,26 +53,26 @@ class Sudoku:
         block_y = y // self.block_size
         for xi in range(block_x, block_x + self.block_size):
             for yi in range(block_y, block_y + self.block_size):
-                if self.cells[xi][yi] == val:
+                if self.cells[xi][yi] == symbol:
                     return False
 
         return True
 
-    # try to set 'val' in (x, y)
-    def set_cell(self, x, y, val):
-        if not self.can_set(x, y, val):
+    # try to set 'symbol' in (x, y)
+    def set_cell(self, x, y, symbol):
+        if not self.can_set(x, y, symbol):
             return False
 
-        self.cells[x][y] = val
+        self.cells[x][y] = symbol
         return True
 
-    # try to fix 'val' in (x, y)
-    def set_fixed(self, x, y, val):
-        if not self.can_set(x, y, val):
+    # try to fix 'symbol' in (x, y)
+    def set_fixed(self, x, y, symbol):
+        if not self.can_set(x, y, symbol):
             return False
 
         self.fixed[x][y] = True
-        self.cells[x][y] = val
+        self.cells[x][y] = symbol
         return True
 
     # clear the fixed status of (x, y)
@@ -89,13 +89,13 @@ class Sudoku:
 
         for y in range(self.size):
             for x in range(self.size):
-                val = self.cells[x][y]
+                symbol = self.cells[x][y]
 
-                if val == None:
+                if symbol == None:
                     result += ' _ '
                 elif self.fixed[x][y]:
-                    result += '[' + str(val) + ']'
+                    result += '[' + str(symbol) + ']'
                 else:
-                    result += ' ' + str(val) + ' '
+                    result += ' ' + str(symbol) + ' '
             result += '\n'
         return result
