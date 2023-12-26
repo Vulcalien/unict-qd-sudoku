@@ -99,3 +99,38 @@ class Sudoku:
                     result += ' ' + str(symbol) + ' '
             result += '\n'
         return result
+
+    def has_unique_solution(self):
+        return self.has_solutions() == 1
+
+    # recursive backtracking algorithm
+    #
+    # returns:
+    #   '0' if no solution was found
+    #   '1' if the solution is unique
+    #   more than '1' if there are multiple solutions
+    def has_solutions(self, x=0, y=0, count=0):
+        # if (x, y) is outside the grid, then a solution was found
+        if (x < 0 or x >= self.size) or (y < 0 or y >= self.size):
+            return count + 1
+
+        next_x = (x + 1) % self.size
+        next_y = y + (x + 1) // self.size
+
+        # if the cell is fixed, skip it
+        if self.fixed[x][y]:
+            return self.has_solutions(next_x, next_y, count)
+
+        # try to place every symbol in the cell
+        for symbol in range(1, self.size + 1):
+            if self.set_cell(x, y, symbol):
+                count = self.has_solutions(next_x, next_y, count)
+
+                self.cells[x][y] = None
+
+                # stop searching for solutions after having found more
+                # than one
+                if count > 1:
+                    break
+
+        return count
