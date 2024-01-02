@@ -71,20 +71,11 @@ class Sudoku:
 
     # try to fix 'symbol' in (x, y)
     def set_fixed(self, x, y, symbol):
-        if not self.can_set(x, y, symbol):
-            return False
+        if self.set_cell(x, y, symbol):
+            self.fixed[x][y] = True
+            return True
 
-        self.fixed[x][y] = True
-        self.cells[x][y] = symbol
-        return True
-
-    # clear the fixed status of (x, y)
-    def clear_fixed(self, x, y):
-        if (x < 0 or x >= self.size) or (y < 0 or y >= self.size):
-            return False
-
-        self.fixed[x][y] = False
-        return True
+        return False
 
     # this can be useful for debugging
     def __str__(self):
