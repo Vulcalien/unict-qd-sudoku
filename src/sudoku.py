@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import random
+
 # returns a 'size x size' matrix filled with 'val'
 def generate_square_matrix(size, val):
     matrix = []
@@ -137,3 +139,55 @@ class Sudoku:
                     break
 
         return count
+
+    def generate_grid(self):
+        self.generate_full_grid()
+
+        # DEBUG
+        for i in range(100):
+            self.try_to_clear_random_cell()
+
+    def generate_full_grid(self, x=0, y=0):
+        # if (x, y) is outside the grid, then the grid is complete
+        if (x < 0 or x >= self.size) or (y < 0 or y >= self.size):
+            return True
+
+        next_x, next_y = self.next_cell_coordinates(x, y)
+        symbols = random.sample(self.get_symbols(), k=self.size)
+
+        # try to place every symbol in the cell
+        for symbol in symbols:
+            if self.set_fixed(x, y, symbol):
+                if self.generate_full_grid(next_x, next_y):
+                    return True
+
+                self.cells[x][y] = None
+                self.fixed[x][y] = False
+
+        return False
+
+    # Attempt to remove one symbol from the grid while maintaining
+    # uniqueness of the solution.
+    def try_to_clear_random_cell(self):
+        # find a fixed cell
+        while True:
+            # TODO this cycle may never end: find a better way to
+            # find a random fixed cell.
+
+            x = random.randrange(self.size)
+            y = random.randrange(self.size)
+
+            if self.fixed[x][y]:
+                break
+
+        symbol = self.cells[x][y]
+        self.cells[x][y] = None
+        self.fixed[x][y] = False
+
+        if not self.has_unique_solution():
+            self.cells[x][y] = symbol
+            self.fixed[x][y] = True
+
+            return False
+
+        return True
