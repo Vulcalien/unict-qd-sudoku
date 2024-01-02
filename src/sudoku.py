@@ -1,4 +1,4 @@
-# Copyright 2023 Vulcalien
+# Copyright 2023-2024 Vulcalien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,6 +30,9 @@ class Sudoku:
 
         self.cells = generate_square_matrix(self.size, None)
         self.fixed = generate_square_matrix(self.size, False)
+
+    def get_symbols(self):
+        return range(1, self.size + 1)
 
     # returns True if 'symbol' can be placed in (x, y), False otherwise
     def can_set(self, x, y, symbol):
@@ -100,6 +103,16 @@ class Sudoku:
             result += '\n'
         return result
 
+    # Calculate the coordinates of the next cell.
+    # If the right border if reached, the coordinates of the left-most
+    # cell of the row beneath are returned.
+    # If the given cell is the bottom-right corner of the grid, then the
+    # returned coordinates point to a cell outside of the grid.
+    def next_cell_coordinates(self, x, y):
+        next_x = (x + 1) % self.size
+        next_y = y + (x + 1) // self.size
+        return (next_x, next_y)
+
     def has_unique_solution(self):
         return self.has_solutions() == 1
 
@@ -114,15 +127,14 @@ class Sudoku:
         if (x < 0 or x >= self.size) or (y < 0 or y >= self.size):
             return count + 1
 
-        next_x = (x + 1) % self.size
-        next_y = y + (x + 1) // self.size
+        next_x, next_y = self.next_cell_coordinates(x, y)
 
         # if the cell is fixed, skip it
         if self.fixed[x][y]:
             return self.has_solutions(next_x, next_y, count)
 
         # try to place every symbol in the cell
-        for symbol in range(1, self.size + 1):
+        for symbol in self.get_symbols():
             if self.set_cell(x, y, symbol):
                 count = self.has_solutions(next_x, next_y, count)
 
