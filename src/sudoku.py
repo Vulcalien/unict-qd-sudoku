@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # returns a 'size x size' matrix filled with 'val'
-def generate_square_matrix(size: int, val: any):
+def generate_square_matrix(size: int, val: any) -> list[list[int]]:
     matrix = []
     for i in range(size):
         matrix.append([])
@@ -32,7 +32,7 @@ class Sudoku:
         self.fixed = generate_square_matrix(self.size, False)
 
     # returns True if 'symbol' can be placed in (x, y), False otherwise
-    def can_set(self, x: int, y: int, symbol: int):
+    def can_set(self, x: int, y: int, symbol: int) -> bool:
         # check if the input is valid
         if ((x < 0 or x >= self.size) or
             (y < 0 or y >= self.size) or
@@ -59,7 +59,7 @@ class Sudoku:
         return True
 
     # try to set 'symbol' in (x, y)
-    def set_cell(self, x: int, y: int, symbol: int):
+    def set_cell(self, x: int, y: int, symbol: int) -> bool:
         if not self.can_set(x, y, symbol):
             return False
 
@@ -67,7 +67,7 @@ class Sudoku:
         return True
 
     # try to fix 'symbol' in (x, y)
-    def set_fixed(self, x: int, y: int, symbol: int):
+    def set_fixed(self, x: int, y: int, symbol: int) -> bool:
         if not self.can_set(x, y, symbol):
             return False
 
@@ -76,7 +76,7 @@ class Sudoku:
         return True
 
     # clear the fixed status of (x, y)
-    def clear_fixed(self, x: int, y: int):
+    def clear_fixed(self, x: int, y: int) -> bool:
         if (x < 0 or x >= self.size) or (y < 0 or y >= self.size):
             return False
 
