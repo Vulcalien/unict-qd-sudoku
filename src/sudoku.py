@@ -83,7 +83,7 @@ class Sudoku:
         self.fixed[x][y] = False
         return True
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         result = ''
 
         for y in range(self.size):
