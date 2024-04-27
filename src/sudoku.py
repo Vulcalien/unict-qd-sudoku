@@ -1,4 +1,4 @@
-# Copyright 2023 Vulcalien
+# Copyright 2023-2024 Vulcalien
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # returns a 'size x size' matrix filled with 'val'
-def generate_square_matrix(size, val):
+def generate_square_matrix(size: int, val: any):
     matrix = []
     for i in range(size):
         matrix.append([])
@@ -24,7 +24,7 @@ def generate_square_matrix(size, val):
 
 class Sudoku:
 
-    def __init__(self, block_size):
+    def __init__(self, block_size: int):
         self.block_size = block_size
         self.size = pow(block_size, 2)
 
@@ -32,7 +32,7 @@ class Sudoku:
         self.fixed = generate_square_matrix(self.size, False)
 
     # returns True if 'symbol' can be placed in (x, y), False otherwise
-    def can_set(self, x, y, symbol):
+    def can_set(self, x: int, y: int, symbol: int):
         # check if the input is valid
         if ((x < 0 or x >= self.size) or
             (y < 0 or y >= self.size) or
@@ -59,7 +59,7 @@ class Sudoku:
         return True
 
     # try to set 'symbol' in (x, y)
-    def set_cell(self, x, y, symbol):
+    def set_cell(self, x: int, y: int, symbol: int):
         if not self.can_set(x, y, symbol):
             return False
 
@@ -67,7 +67,7 @@ class Sudoku:
         return True
 
     # try to fix 'symbol' in (x, y)
-    def set_fixed(self, x, y, symbol):
+    def set_fixed(self, x: int, y: int, symbol: int):
         if not self.can_set(x, y, symbol):
             return False
 
@@ -76,7 +76,7 @@ class Sudoku:
         return True
 
     # clear the fixed status of (x, y)
-    def clear_fixed(self, x, y):
+    def clear_fixed(self, x: int, y: int):
         if (x < 0 or x >= self.size) or (y < 0 or y >= self.size):
             return False
 
