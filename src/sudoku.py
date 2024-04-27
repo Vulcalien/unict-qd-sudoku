@@ -84,7 +84,7 @@ class Sudoku:
         return True
 
     # this can be useful for debugging
-    def __str__(self):
+    def __repr__(self):
         result = ''
 
         for y in range(self.size):
