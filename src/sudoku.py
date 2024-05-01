@@ -31,6 +31,10 @@ class Sudoku:
         self.cells = generate_square_matrix(self.size, None)
         self.fixed = generate_square_matrix(self.size, False)
 
+    def get_symbols(self) -> list[int]:
+        """returns an ordered list of all the allowed symbols"""
+        return range(1, self.size + 1)
+
     def can_set(self, x: int, y: int, symbol: int) -> bool:
         """returns True if 'symbol' can be placed in (x, y), False otherwise"""
         # check if the input is valid
