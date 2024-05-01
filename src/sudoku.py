@@ -85,6 +85,18 @@ class Sudoku:
         self.fixed[x][y] = False
         return True
 
+    def get_next_cell_coordinates(self, x: int, y: int) -> tuple[int, int]:
+        """Returns the coordinates of the next cell.
+        It acts as if cells were ordered top-to-bottom then
+        left-to-right. So, if (x, y) is a cell in the right border, the
+        returned value will be (0, y+1).
+        If (x, y) is the bottom-right corner of the grid, the returned
+        coordinates point to a non-existent cell outside of the grid.
+        """
+        next_x = (x + 1) % self.size
+        next_y = y + (x + 1) // self.size
+        return (next_x, next_y)
+
     def __repr__(self) -> str:
         result = ''
 
