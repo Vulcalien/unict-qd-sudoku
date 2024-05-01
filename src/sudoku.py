@@ -102,6 +102,43 @@ class Sudoku:
         next_y = y + (x + 1) // self.size
         return (next_x, next_y)
 
+    def has_unique_solution(self) -> bool:
+        """returns True if the grid has one unique solution, False otherwise"""
+        return self.__has_solutions() == 1
+
+    def __has_solutions(self, x=0, y=0, count=0) -> int:
+        """Recursive backtracking algorithm.
+        Returns:
+            '0' if no solution was found
+            '1' if the solution is unique
+            more than '1' if there are multiple solutions
+        """
+
+        # if (x, y) is outside the grid, then a solution was found
+        if not self.is_cell_inside(x, y):
+            return count + 1
+
+        next_x, next_y = self.get_next_cell_coordinates(x, y)
+
+        # if the cell is fixed, skip it
+        if self.fixed[x][y]:
+            return self.__has_solutions(next_x, next_y, count)
+
+        old_symbol = self.cells[x][y]
+
+        # try to place every symbol in the cell
+        for symbol in self.get_symbols():
+            if self.set_cell(x, y, symbol):
+                print(self) # DEBUG
+
+                count = self.__has_solutions(next_x, next_y, count)
+                self.cells[x][y] = old_symbol
+
+                # multiple solutions were found: stop searching for more
+                if count > 1:
+                    break
+        return count
+
     def __repr__(self) -> str:
         result = ''
 
