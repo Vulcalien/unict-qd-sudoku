@@ -68,12 +68,10 @@ class Sudoku:
 
     def set_fixed(self, x: int, y: int, symbol: int) -> bool:
         """try to fix 'symbol' in (x, y)"""
-        if not self.can_set(x, y, symbol):
-            return False
-
-        self.fixed[x][y] = True
-        self.cells[x][y] = symbol
-        return True
+        if self.set_cell(x, y, symbol):
+            self.fixed[x][y] = True
+            return True
+        return False
 
     def clear_fixed(self, x: int, y: int) -> bool:
         """clear the fixed status of (x, y)"""
