@@ -35,13 +35,18 @@ class Sudoku:
         """returns an ordered list of all the allowed symbols"""
         return range(1, self.size + 1)
 
+    def is_cell_inside(self, x: int, y: int) -> bool:
+        """returns True if (x, y) is inside the grid, False otherwise"""
+        if x < 0 or x >= self.size or y < 0 or y >= self.size:
+            return False
+        return True
+
     def can_set(self, x: int, y: int, symbol: int) -> bool:
         """returns True if 'symbol' can be placed in (x, y), False otherwise"""
         # check if the input is valid
-        if ((x < 0 or x >= self.size) or
-            (y < 0 or y >= self.size) or
-            (symbol < 1 or symbol > self.size)):
-               return False
+        if (not self.is_cell_inside(x, y) or
+            symbol not in self.get_symbols()):
+            return False
 
         # check if (x, y) is fixed
         if self.fixed[x][y]:
@@ -79,7 +84,7 @@ class Sudoku:
 
     def clear_fixed(self, x: int, y: int) -> bool:
         """clear the fixed status of (x, y)"""
-        if (x < 0 or x >= self.size) or (y < 0 or y >= self.size):
+        if not self.is_cell_inside(x, y):
             return False
 
         self.fixed[x][y] = False
