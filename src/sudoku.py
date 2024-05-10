@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import random
+
 def generate_square_matrix(size: int, val: any) -> list[list[int]]:
     """returns a 'size x size' matrix filled with 'val'"""
     matrix = []
@@ -129,8 +131,6 @@ class Sudoku:
         # try to place every symbol in the cell
         for symbol in self.get_symbols():
             if self.set_cell(x, y, symbol):
-                print(self) # DEBUG
-
                 count = self.__has_solutions(next_x, next_y, count)
                 self.cells[x][y] = old_symbol
 
@@ -138,6 +138,64 @@ class Sudoku:
                 if count > 1:
                     break
         return count
+
+    def generate_grid(self, iterations: int) -> int:
+        self.__fill_grid(0, 0)
+
+        count = 0
+        for i in range(iterations):
+            print('iteration: ', i)
+            if self.__try_to_clear_random_cell():
+                count += 1
+        return count
+
+    def __fill_grid(self, x: int, y: int) -> bool:
+        """randomly fill a grid with fixed values"""
+
+        # if (x, y) is outside the grid, then the grid is entirely full
+        if not self.is_cell_inside(x, y):
+            return True
+
+        next_x, next_y = self.get_next_cell_coordinates(x, y)
+        symbols = random.sample(self.get_symbols(), k=self.size)
+
+        # try to place every symbol in the cell
+        for symbol in symbols:
+            if self.set_fixed(x, y, symbol):
+                if self.__fill_grid(next_x, next_y):
+                    return True # the grid is full
+
+                # this symbol didn't work: go back
+                self.cells[x][y] = None
+                self.fixed[x][y] = False
+
+        # no symbol could be placed
+        return False
+
+    def __try_to_clear_random_cell(self) -> bool:
+        """attempt to remove one symbol from the grid while maintaining
+        uniqueness of the solution"""
+
+        # find (x, y) coordinates of a random fixed cell
+        for y in random.sample(range(self.size), k=self.size):
+            for x in random.sample(range(self.size), k=self.size):
+                if self.fixed[x][y]:
+                    break
+
+        # clear the cell
+        symbol = self.cells[x][y]
+        self.cells[x][y] = None
+        self.fixed[x][y] = False
+
+        # check if the solution is still unique
+        if not self.has_unique_solution():
+            # if not, put the symbol back
+            self.cells[x][y] = symbol
+            self.fixed[x][y] = True
+            return False # the cell could not be cleared
+
+        # the cell was successfully cleared
+        return True
 
     def __repr__(self) -> str:
         result = ''
