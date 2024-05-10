@@ -38,7 +38,6 @@ def test_generate_square_matrix(size, val):
         for element in row:
             assert element == val
 
-
 @pytest.mark.parametrize("block_size, expected_size", [
     (0, 0),
     (1, 1),
@@ -124,3 +123,53 @@ def test_can_set_2(block_size, fix, to_place, expected):
 
     assert grid.set_fixed(fix_x, fix_y, fix_symbol) == True
     assert grid.can_set(x, y, symbol) == expected
+
+@pytest.mark.parametrize("block_size, x, y, next_x, next_y, is_inside", [
+    (3, 0, 0, 1, 0, True),
+    (3, 8, 0, 0, 1, True),
+    (3, 8, 8, 0, 9, False),
+    (2, 3, 1, 0, 2, True),
+    (4, 4, 4, 5, 4, True),
+])
+def test_get_next_cell_coordinates(block_size, x, y, next_x, next_y, is_inside):
+    grid = Sudoku(block_size)
+
+    returned_x, returned_y = grid._Sudoku__get_next_cell_coordinates(x, y)
+
+    assert (returned_x, returned_y) == (next_x, next_y)
+    assert grid.is_cell_inside(returned_x, returned_y) == is_inside
+
+@pytest.mark.parametrize("block_size, cell, fixed, expected_str", [
+    (3, (0, 0, 5), (1, 1, 3),
+        " 5  _  _  _  _  _  _  _  _ \n" +
+        " _ [3] _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n"),
+    (3, (6, 2, 9), (2, 8, 2),
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  9  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _  _  _  _  _  _  _  _ \n" +
+        " _  _ [2] _  _  _  _  _  _ \n"),
+    (2, (3, 3, 3), (2, 3, 2),
+        " _  _  _  _ \n" +
+        " _  _  _  _ \n" +
+        " _  _  _  _ \n" +
+        " _  _ [2] 3 \n")
+])
+def test_repr(block_size, cell, fixed, expected_str):
+    grid = Sudoku(block_size)
+
+    grid.set_cell(cell[0], cell[1], cell[2])
+    grid.set_fixed(fixed[0], fixed[1], fixed[2])
+
+    assert str(grid) == expected_str

@@ -92,7 +92,7 @@ class Sudoku:
         self.fixed[x][y] = False
         return True
 
-    def get_next_cell_coordinates(self, x: int, y: int) -> tuple[int, int]:
+    def __get_next_cell_coordinates(self, x: int, y: int) -> tuple[int, int]:
         """Returns the coordinates of the next cell.
         It acts as if cells were ordered top-to-bottom then
         left-to-right. So, if (x, y) is a cell in the right border, the
@@ -120,7 +120,7 @@ class Sudoku:
         if not self.is_cell_inside(x, y):
             return count + 1
 
-        next_x, next_y = self.get_next_cell_coordinates(x, y)
+        next_x, next_y = self.__get_next_cell_coordinates(x, y)
 
         # if the cell is fixed, skip it
         if self.fixed[x][y]:
@@ -156,7 +156,7 @@ class Sudoku:
         if not self.is_cell_inside(x, y):
             return True
 
-        next_x, next_y = self.get_next_cell_coordinates(x, y)
+        next_x, next_y = self.__get_next_cell_coordinates(x, y)
         symbols = random.sample(self.get_symbols(), k=self.size)
 
         # try to place every symbol in the cell
