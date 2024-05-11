@@ -25,7 +25,7 @@ from sudoku import Sudoku
     (0, 'a'),
     (2, 'f')
 ])
-def test_generate_square_matrix(size, val):
+def test_generate_square_matrix(size: int, val: any):
     matrix = generate_square_matrix(size, val)
 
     # check that the size is correct
@@ -45,7 +45,7 @@ def test_generate_square_matrix(size, val):
     (3, 9),
     (9, 81)
 ])
-def test_sudoku_init(block_size, expected_size):
+def test_sudoku_init(block_size: int, expected_size: int):
     grid = Sudoku(block_size)
 
     assert grid.block_size == block_size
@@ -60,7 +60,7 @@ def test_sudoku_init(block_size, expected_size):
 @pytest.mark.parametrize("block_size", [
     1, 2, 3, 4, 9
 ])
-def test_get_symbols(block_size):
+def test_get_symbols(block_size: int):
     grid = Sudoku(block_size)
 
     assert grid.get_symbols() == range(1, block_size * block_size + 1)
@@ -84,7 +84,7 @@ def test_get_symbols(block_size):
     (3, (5, 3, 5), True),
     (3, (8, 4, 3), True)
 ])
-def test_can_set_1(block_size, to_place, expected):
+def test_can_set_1(block_size: int, to_place: tuple[int, int, int], expected: bool):
     grid = Sudoku(block_size)
     x, y, symbol = to_place
 
@@ -116,7 +116,8 @@ def test_can_set_1(block_size, to_place, expected):
     (3, (3, 3, 9), (3, 4, 4), True),
     (3, (3, 3, 9), (3, 3, 10), False),
 ])
-def test_can_set_2(block_size, fix, to_place, expected):
+def test_can_set_2(block_size: int, fix: tuple[int, int, int],
+                   to_place: [int, int, int], expected: bool):
     grid = Sudoku(block_size)
     fix_x, fix_y, fix_symbol = fix
     x, y, symbol = to_place
@@ -131,7 +132,8 @@ def test_can_set_2(block_size, fix, to_place, expected):
     (2, 3, 1, 0, 2, True),
     (4, 4, 4, 5, 4, True),
 ])
-def test_get_next_cell_coordinates(block_size, x, y, next_x, next_y, is_inside):
+def test_get_next_cell_coordinates(block_size: int, x: int, y: int,
+                                   next_x: int, next_y: int, is_inside: bool):
     grid = Sudoku(block_size)
 
     returned_x, returned_y = grid._Sudoku__get_next_cell_coordinates(x, y)
@@ -166,7 +168,8 @@ def test_get_next_cell_coordinates(block_size, x, y, next_x, next_y, is_inside):
         " _  _  _  _ \n" +
         " _  _ [2] 3 \n")
 ])
-def test_repr(block_size, cell, fixed, expected_str):
+def test_repr(block_size: int, cell: tuple[int, int, int],
+              fixed: tuple[int, int, int], expected_str: str):
     grid = Sudoku(block_size)
 
     grid.set_cell(cell[0], cell[1], cell[2])
