@@ -1,0 +1,6 @@
+Screen
+{
+    background: $background-darken-3;
+    border: thick $accent-darken-1;
+    overflow-x: auto;
+}
