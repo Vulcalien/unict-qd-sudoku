@@ -1,1 +1,1 @@
-__all__=["cell.Cell", "matrix", "menu"]
+__all__=["cell", "matrix", "menu"]
