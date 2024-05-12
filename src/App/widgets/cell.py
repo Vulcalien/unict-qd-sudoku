@@ -23,7 +23,7 @@ from textual.widgets import Static
 class Cell(Static):
 
     class Modified(Message):
-         def __init__(self, id : str, old_digit : str):
+         def __init__(self, id : str, old_digit : str) -> None:
               self.id=id
               self.old_digit=str  
               super().__init__()       
@@ -37,7 +37,7 @@ class Cell(Static):
 
 
     #Technically I could do a more generalized version of this (NxN sudokus), for now I'll stick to classic cells found in 3x3 sudokus
-    def validate_digit(self, character : str) -> str | int:
+    def validate_digit(self, character : str) -> str:
          if(character>"9" or character <"1"):
               return " "
          return character
@@ -46,6 +46,16 @@ class Cell(Static):
     Cell {
     background: $background-darken-3;
     color: $text;
+    &.correct
+    {
+          border: tall $success;
+          color: $success;
+    }
+    &.error
+    {
+          border: tall $error;
+          color: $error;
+    }
     &:dark
     {
         border: tall white;

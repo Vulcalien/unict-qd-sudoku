@@ -22,7 +22,7 @@ from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.containers import Grid
 from textual.widget import Widget
-
+from typing import Iterable, List
 
 class Matrix(Grid):
 
@@ -40,8 +40,18 @@ class Matrix(Grid):
           Binding("s,down", "go_down", "Go one cell below", show=False),
           Binding("d,right", "go_right", "Go on cell to the right", show=False),
           Binding("a,left", "go_left", "Go one cell to the left", show=False)
+          #Binding("c", "clear", "Clears the cells", show=False)
           ]
      
+
+     
+     def to_iterable(self) -> Iterable[Iterable[str]]:
+          for y in range(self.line_size):
+                    yield (cell.digit for cell in (self.query_one(f"#cell_{x}_{y}", Cell) for x in range(self.line_size)))
+
+     def to_list(self) -> List[List[str]]:
+           return [list(x) for x in self.to_iterable()]
+
 
      def move_to(self, x: int, y:int) -> None:
           self.query_one(f"#cell_{x}_{y}",Cell).focus()
@@ -60,6 +70,7 @@ class Matrix(Grid):
 
      @on(Cell.Modified)
      def modified(self, modified : Cell.Modified) -> None:
+          log.debug(self.to_list())
           modif_cell=self.query_one("#"+modified.id, Cell)
           #TODO: Verify that the modified value is correct according to the matrix mode
           x,y=self.extract_position(modif_cell)
@@ -93,6 +104,11 @@ class Matrix(Grid):
 
      def query_cell(self, x: int, y:int) -> Cell:
           return self.query_one(f"#cell_{x}_{y}", Cell)
+     
+     def action_clear(self) -> None:
+               for cell in self.query("Cell").results(Cell):
+                     cell.digit=" "
+                     cell.remove_class("correct", "error", "no_state", update=True)
 
      def __init__(self, m_size : int, *children: Widget, name: str | None = None, id: str | None = None, classes: str | None = None, disabled: bool = False) -> None:
           super().__init__(*children, name=name, id=id, classes=classes, disabled=disabled)
@@ -102,5 +118,4 @@ class Matrix(Grid):
           self.styles.grid_size_columns=self.line_size
 
      def on_mount(self) -> ComposeResult:
-          #Oggi offre l'haskeller
           self.mount_all(Cell(" ", id=f"cell_{x}_{y}") for y in range(self.line_size) for x in range(self.line_size))
