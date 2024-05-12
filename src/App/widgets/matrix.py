@@ -13,8 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from enum import Enum, auto
 from src.App.widgets.cell import Cell
 
+from textual.message import Message
 from textual import log
 from textual import on
 from textual.events import DescendantBlur, Blur
@@ -23,6 +25,33 @@ from textual.binding import Binding
 from textual.containers import Grid
 from textual.widget import Widget
 from typing import Iterable, List
+
+class CellResult(Enum):
+     """
+Indicates the result of an answer (Input of a number in a sudoku grid).
+
+     CORRECT indicates that the answer was correct.
+     
+     ERROR indicates that the answer was incorrect because it doesn't respect the rules of sudoku.
+     
+     DELETED means that the user deleted their answer after making an error.
+     
+     UNCHECKED means that the user has inserted an answer but it wasn't checked if it respects the rules of sudoku (Used for STATIC Mode)"""
+     CORRECT=auto()
+     ERROR=auto()
+     DELETED=auto()
+     UNCHECKED=auto()
+
+
+class Mode(Enum):
+     """Indicates the current sudoku mode being used.
+     
+          ACTIVE Mode will always look up and report errors and correct answers. (AKA: Play)
+     
+          STATIC Mode is used for inserting cells without checking if it is a valid sudoku (AKA: Resolve)"""
+     ACTIVE=auto()
+     STATIC=auto()
+
 
 class Matrix(Grid):
 
@@ -44,12 +73,20 @@ class Matrix(Grid):
           ]
      
 
-     
+
+     class Modified(Message):
+          def __init__(self, cell : Cell, result : CellResult) -> None:
+                 self.cell=cell
+                 self.result=result
+                 super().__init__()
+
+
      def to_iterable(self) -> Iterable[Iterable[str]]:
           for y in range(self.line_size):
                     yield (cell.digit for cell in (self.query_one(f"#cell_{x}_{y}", Cell) for x in range(self.line_size)))
 
      def to_list(self) -> List[List[str]]:
+           """Creates a list of lists (Matrix) that represents the grid."""
            return [list(x) for x in self.to_iterable()]
 
 
@@ -63,7 +100,7 @@ class Matrix(Grid):
      
 
      def get_currently_focused_position(self) -> tuple[int,int]:
-          return self.extract_position(self.query_one("Cell:focus",Cell))
+          return self.extract_position(self.get_currently_focused())
      
      def get_currently_focused(self) -> Cell:
           return self.query_one("Cell:focus", Cell)
