@@ -118,18 +118,37 @@ class Sudoku:
         if self.fixed[x][y]:
             return self.__has_solutions(next_x, next_y, count)
 
-        old_symbol = self.cells[x][y]
-
         # try to place every symbol in the cell
         for symbol in self.get_symbols():
             if self.__set_cell(x, y, symbol):
                 count = self.__has_solutions(next_x, next_y, count)
-                self.cells[x][y] = old_symbol
+                self.cells[x][y] = None
 
                 # multiple solutions were found: stop searching for more
                 if count > 1:
                     break
         return count
+
+    def __solve_grid(self, x=0, y=0) -> bool:
+        """solve a grid that has an unique solution"""
+
+        # if (x, y) is outside the grid, then a solution was found
+        if not self.is_cell_inside(x, y):
+            return True
+
+        next_x, next_y = self.__get_next_cell_coordinates(x, y)
+
+        # if the cell is fixed, skip it
+        if self.fixed[x][y]:
+            return self.__solve_grid(next_x, next_y)
+
+        # try to place every symbol in the cell
+        for symbol in self.get_symbols():
+            if self.__set_cell(x, y, symbol):
+                if self.__solve_grid(next_x, next_y):
+                    return True
+                self.cells[x][y] = None
+        return False
 
     def generate_grid(self, iterations: int) -> int:
         self.__fill_grid(0, 0)
@@ -139,6 +158,8 @@ class Sudoku:
             print('iteration: ', i)
             if self.__try_to_clear_random_cell():
                 count += 1
+
+        self.__solve_grid()
         return count
 
     def __fill_grid(self, x: int, y: int) -> bool:
