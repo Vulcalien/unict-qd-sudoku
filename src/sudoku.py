@@ -43,6 +43,20 @@ class Sudoku:
             return False
         return True
 
+    def get_cell(self, x: int, y: int) -> any:
+        """returns the symbol in the cell at (x, y), or None if the cell
+        is outside the grid"""
+        if not self.is_cell_inside(x, y):
+            return None
+        return self.cells[x][y]
+
+    def is_fixed(self, x: int, y: int) -> bool:
+        """returns True if the cell at (x, y) is fixed, False
+        otherwise"""
+        if not self.is_cell_inside(x, y):
+            return False
+        return self.fixed[x][y]
+
     def __can_set(self, x: int, y: int, symbol: int) -> bool:
         """returns True if 'symbol' can be placed in (x, y), False otherwise"""
         # check if the input is valid
