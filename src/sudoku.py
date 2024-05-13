@@ -84,14 +84,6 @@ class Sudoku:
             return True
         return False
 
-    def clear_fixed(self, x: int, y: int) -> bool:
-        """clear the fixed status of (x, y)"""
-        if not self.is_cell_inside(x, y):
-            return False
-
-        self.fixed[x][y] = False
-        return True
-
     def __get_next_cell_coordinates(self, x: int, y: int) -> tuple[int, int]:
         """Returns the coordinates of the next cell.
         It acts as if cells were ordered top-to-bottom then
