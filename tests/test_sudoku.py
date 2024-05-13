@@ -65,6 +65,38 @@ def test_get_symbols(block_size: int):
 
     assert grid.get_symbols() == range(1, block_size * block_size + 1)
 
+@pytest.mark.parametrize("block_size, x, y, val", [
+    (3, 5, 5, 2),
+    (3, 2, 5, 1),
+    (3, 1, 5, 1),
+    (3, 2, 8, 9),
+    (3, 2, 5, 1),
+    (2, 2, 2, 2),
+    (2, 0, 0, 6),
+])
+def test_get_cell(block_size: int, x: int, y: int, val: int):
+    grid = Sudoku(block_size)
+
+    grid.cells[x][y] = val
+
+    assert grid.get_cell(x, y) == val
+
+@pytest.mark.parametrize("block_size, x, y, val", [
+    (3, 5, 5, False),
+    (3, 2, 5, True),
+    (3, 1, 5, False),
+    (3, 2, 8, True),
+    (3, 2, 5, False),
+    (2, 2, 2, True),
+    (2, 0, 0, False),
+])
+def test_is_fixed(block_size: int, x: int, y: int, val: bool):
+    grid = Sudoku(block_size)
+
+    grid.fixed[x][y] = val
+
+    assert grid.is_fixed(x, y) == val
+
 @pytest.mark.parametrize("block_size, to_place, expected", [
     (1, (0, 0, -1), False),
     (1, (0, 0, 0), False),
