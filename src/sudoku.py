@@ -169,7 +169,6 @@ class Sudoku:
 
         count = 0
         for i in range(iterations):
-            print('iteration: ', i)
             if self.__try_to_clear_random_cell():
                 count += 1
 
