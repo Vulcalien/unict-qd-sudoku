@@ -96,10 +96,14 @@ class Matrix(Grid):
 
      def extract_position(self, cell : Cell) -> tuple[int, int]:
           """Extracts x and y coordinates from a cell"""
-          return tuple(int(i) for i in ((cell.id.split("_"))[1:]))
+          if(cell.id is not None):
+               s=cell.id.split("_", maxsplit=3)
+               return (int(s[1]), int(s[2]))
+          #TODO: Add proper exception handling
+          return (-1,-1)
      
 
-     def get_currently_focused_position(self) -> tuple[int,int]:
+     def get_currently_focused_position(self) -> tuple[int, int]:
           return self.extract_position(self.get_currently_focused())
      
      def get_currently_focused(self) -> Cell:
@@ -147,12 +151,13 @@ class Matrix(Grid):
                      cell.digit=" "
                      cell.remove_class("correct", "error", "no_state", update=True)
 
-     def __init__(self, m_size : int, *children: Widget, name: str | None = None, id: str | None = None, classes: str | None = None, disabled: bool = False) -> None:
+     def __init__(self, size : int, mode : Mode = Mode.STATIC, *children: Widget, name: str | None = None, id: str | None = None, classes: str | None = None, disabled: bool = False) -> None:
           super().__init__(*children, name=name, id=id, classes=classes, disabled=disabled)
-          self.m_size=m_size
-          self.line_size=m_size**2
+          self.m_size=size
+          self.line_size=self.m_size**2
           self.styles.grid_size_rows=self.line_size
           self.styles.grid_size_columns=self.line_size
+          self.mode=mode
 
-     def on_mount(self) -> ComposeResult:
+     def on_mount(self) -> None:
           self.mount_all(Cell(" ", id=f"cell_{x}_{y}") for y in range(self.line_size) for x in range(self.line_size))
