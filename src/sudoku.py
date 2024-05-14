@@ -43,7 +43,21 @@ class Sudoku:
             return False
         return True
 
-    def can_set(self, x: int, y: int, symbol: int) -> bool:
+    def get_cell(self, x: int, y: int) -> any:
+        """returns the symbol in the cell at (x, y), or None if the cell
+        is outside the grid"""
+        if not self.is_cell_inside(x, y):
+            return None
+        return self.cells[x][y]
+
+    def is_fixed(self, x: int, y: int) -> bool:
+        """returns True if the cell at (x, y) is fixed, False
+        otherwise"""
+        if not self.is_cell_inside(x, y):
+            return False
+        return self.fixed[x][y]
+
+    def __can_set(self, x: int, y: int, symbol: int) -> bool:
         """returns True if 'symbol' can be placed in (x, y), False otherwise"""
         # check if the input is valid
         if (not self.is_cell_inside(x, y) or
@@ -69,28 +83,20 @@ class Sudoku:
 
         return True
 
-    def set_cell(self, x: int, y: int, symbol: int) -> bool:
+    def __set_cell(self, x: int, y: int, symbol: int) -> bool:
         """try to set 'symbol' in (x, y)"""
-        if not self.can_set(x, y, symbol):
+        if not self.__can_set(x, y, symbol):
             return False
 
         self.cells[x][y] = symbol
         return True
 
-    def set_fixed(self, x: int, y: int, symbol: int) -> bool:
+    def __set_fixed(self, x: int, y: int, symbol: int) -> bool:
         """try to fix 'symbol' in (x, y)"""
-        if self.set_cell(x, y, symbol):
+        if self.__set_cell(x, y, symbol):
             self.fixed[x][y] = True
             return True
         return False
-
-    def clear_fixed(self, x: int, y: int) -> bool:
-        """clear the fixed status of (x, y)"""
-        if not self.is_cell_inside(x, y):
-            return False
-
-        self.fixed[x][y] = False
-        return True
 
     def __get_next_cell_coordinates(self, x: int, y: int) -> tuple[int, int]:
         """Returns the coordinates of the next cell.
@@ -126,27 +132,47 @@ class Sudoku:
         if self.fixed[x][y]:
             return self.__has_solutions(next_x, next_y, count)
 
-        old_symbol = self.cells[x][y]
-
         # try to place every symbol in the cell
         for symbol in self.get_symbols():
-            if self.set_cell(x, y, symbol):
+            if self.__set_cell(x, y, symbol):
                 count = self.__has_solutions(next_x, next_y, count)
-                self.cells[x][y] = old_symbol
+                self.cells[x][y] = None
 
                 # multiple solutions were found: stop searching for more
                 if count > 1:
                     break
         return count
 
+    def __solve_grid(self, x=0, y=0) -> bool:
+        """solve a grid that has an unique solution"""
+
+        # if (x, y) is outside the grid, then a solution was found
+        if not self.is_cell_inside(x, y):
+            return True
+
+        next_x, next_y = self.__get_next_cell_coordinates(x, y)
+
+        # if the cell is fixed, skip it
+        if self.fixed[x][y]:
+            return self.__solve_grid(next_x, next_y)
+
+        # try to place every symbol in the cell
+        for symbol in self.get_symbols():
+            if self.__set_cell(x, y, symbol):
+                if self.__solve_grid(next_x, next_y):
+                    return True
+                self.cells[x][y] = None
+        return False
+
     def generate_grid(self, iterations: int) -> int:
         self.__fill_grid(0, 0)
 
         count = 0
         for i in range(iterations):
-            print('iteration: ', i)
             if self.__try_to_clear_random_cell():
                 count += 1
+
+        self.__solve_grid()
         return count
 
     def __fill_grid(self, x: int, y: int) -> bool:
@@ -161,7 +187,7 @@ class Sudoku:
 
         # try to place every symbol in the cell
         for symbol in symbols:
-            if self.set_fixed(x, y, symbol):
+            if self.__set_fixed(x, y, symbol):
                 if self.__fill_grid(next_x, next_y):
                     return True # the grid is full
 

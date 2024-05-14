@@ -65,6 +65,38 @@ def test_get_symbols(block_size: int):
 
     assert grid.get_symbols() == range(1, block_size * block_size + 1)
 
+@pytest.mark.parametrize("block_size, x, y, val", [
+    (3, 5, 5, 2),
+    (3, 2, 5, 1),
+    (3, 1, 5, 1),
+    (3, 2, 8, 9),
+    (3, 2, 5, 1),
+    (2, 2, 2, 2),
+    (2, 0, 0, 6),
+])
+def test_get_cell(block_size: int, x: int, y: int, val: int):
+    grid = Sudoku(block_size)
+
+    grid.cells[x][y] = val
+
+    assert grid.get_cell(x, y) == val
+
+@pytest.mark.parametrize("block_size, x, y, val", [
+    (3, 5, 5, False),
+    (3, 2, 5, True),
+    (3, 1, 5, False),
+    (3, 2, 8, True),
+    (3, 2, 5, False),
+    (2, 2, 2, True),
+    (2, 0, 0, False),
+])
+def test_is_fixed(block_size: int, x: int, y: int, val: bool):
+    grid = Sudoku(block_size)
+
+    grid.fixed[x][y] = val
+
+    assert grid.is_fixed(x, y) == val
+
 @pytest.mark.parametrize("block_size, to_place, expected", [
     (1, (0, 0, -1), False),
     (1, (0, 0, 0), False),
@@ -88,7 +120,7 @@ def test_can_set_1(block_size: int, to_place: tuple[int, int, int], expected: bo
     grid = Sudoku(block_size)
     x, y, symbol = to_place
 
-    assert grid.can_set(x, y, symbol) == expected
+    assert grid._Sudoku__can_set(x, y, symbol) == expected
 
 @pytest.mark.parametrize("block_size, fix, to_place, expected", [
     (1, (0, 0, 1), (0, 0, 1), False),
@@ -122,8 +154,8 @@ def test_can_set_2(block_size: int, fix: tuple[int, int, int],
     fix_x, fix_y, fix_symbol = fix
     x, y, symbol = to_place
 
-    assert grid.set_fixed(fix_x, fix_y, fix_symbol) == True
-    assert grid.can_set(x, y, symbol) == expected
+    assert grid._Sudoku__set_fixed(fix_x, fix_y, fix_symbol) == True
+    assert grid._Sudoku__can_set(x, y, symbol) == expected
 
 @pytest.mark.parametrize("block_size, x, y, next_x, next_y, is_inside", [
     (3, 0, 0, 1, 0, True),
@@ -172,7 +204,7 @@ def test_repr(block_size: int, cell: tuple[int, int, int],
               fixed: tuple[int, int, int], expected_str: str):
     grid = Sudoku(block_size)
 
-    grid.set_cell(cell[0], cell[1], cell[2])
-    grid.set_fixed(fixed[0], fixed[1], fixed[2])
+    grid._Sudoku__set_cell(cell[0], cell[1], cell[2])
+    grid._Sudoku__set_fixed(fixed[0], fixed[1], fixed[2])
 
     assert str(grid) == expected_str
