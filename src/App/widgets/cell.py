@@ -41,6 +41,7 @@ class Cell(Static):
          if(character>"9" or character <"1"):
               return " "
          return character
+     
 
     DEFAULT_CSS="""
     Cell {
@@ -90,11 +91,11 @@ class Cell(Static):
 
     @on(Key)
     def key_press(self, key : Key) -> None:
-         if(key.character is not None):
-            if(self.validate_digit(key.character)!=' ' or key.key=="backspace"):
-                self.old_digit=self.digit
-                self.digit=key.character
-                self.post_message(self.Modified(self.id, self.old_digit))
+         if(key.character is not None and "correct" not in self.classes and ((key.character>="1" and key.character<="9") or key.key=="backspace")):
+               self.old_digit=self.digit
+               self.digit=key.character
+               if(self.id is not None):
+                    self.post_message(self.Modified(self.id, self.old_digit))
 
     def watch_digit(self) -> None:
          self.update(self.digit)

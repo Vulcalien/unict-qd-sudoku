@@ -146,10 +146,24 @@ class Matrix(Grid):
      def query_cell(self, x: int, y:int) -> Cell:
           return self.query_one(f"#cell_{x}_{y}", Cell)
      
-     def action_clear(self) -> None:
+     def clear(self) -> None:
                for cell in self.query("Cell").results(Cell):
                      cell.digit=" "
                      cell.remove_class("correct", "error", "no_state", update=True)
+
+     
+     def load(self, matrix : List[List[str]]) -> None:
+           self.clear()
+           if(self.mode is Mode.STATIC):
+                 class_str="no_state"
+           else:
+                 class_str="correct"
+           for x in range(self.line_size):
+                 for y in range(self.line_size):
+                       cell=self.query_cell(x,y)
+                       cell.digit=matrix[x][y]
+                       cell.add_class(class_str)
+
 
      def __init__(self, size : int, mode : Mode = Mode.STATIC, *children: Widget, name: str | None = None, id: str | None = None, classes: str | None = None, disabled: bool = False) -> None:
           super().__init__(*children, name=name, id=id, classes=classes, disabled=disabled)
@@ -158,6 +172,8 @@ class Matrix(Grid):
           self.styles.grid_size_rows=self.line_size
           self.styles.grid_size_columns=self.line_size
           self.mode=mode
+
+     
 
      def on_mount(self) -> None:
           self.mount_all(Cell(" ", id=f"cell_{x}_{y}") for y in range(self.line_size) for x in range(self.line_size))
