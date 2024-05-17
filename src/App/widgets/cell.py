@@ -50,12 +50,17 @@ class Cell(Static):
     &.correct
     {
           border: tall $success;
-          color: $success;
+          background: $success;
+    }
+    &.correct.hint
+    {
+          border: tall $primary
+          background: $primary
     }
     &.error
     {
           border: tall $error;
-          color: $error;
+          background: $error;
     }
     &:dark
     {
@@ -64,12 +69,10 @@ class Cell(Static):
     &:hover
     {
         border: tall $accent;
-        color: $accent;
     }
     &:focus
     {
         border: tall $secondary;
-        color: $secondary;
     }
     border: tall black;
     width: auto;
@@ -91,6 +94,7 @@ class Cell(Static):
 
     @on(Key)
     def key_press(self, key : Key) -> None:
+         #Ignore input if the guess is (already) correct
          if(key.character is not None and "correct" not in self.classes and ((key.character>="1" and key.character<="9") or key.key=="backspace")):
                self.old_digit=self.digit
                self.digit=key.character
