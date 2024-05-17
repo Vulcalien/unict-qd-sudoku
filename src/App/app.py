@@ -26,14 +26,14 @@ from textual.events import Click
 
 class SudokuApp(App):
 
-    CSS_PATH="./tcss/screen.tcss"
+    CSS_PATH=["./tcss/screen.tcss"]
 
     TITLE="Sudoku TUI"
 
     BINDINGS = [Binding("ctrl+z", "suspend_process")]
 
     def on_mount(self) -> None:
-        pass
+        self.push_screen(Menu())
         #self.screen.styles.background="background-darken-3"
         #self.screen.styles.border= ("round", "background-lighten-3")
 
@@ -41,13 +41,6 @@ class SudokuApp(App):
     def hide_menu(self) -> None:
         self.query_one("Menu", Menu).display=False
     
-    @on (Button.Pressed, "#resolveb")
-    def resolve(self) -> None:
-        log.debug("Resolve sudoku mode selected!")
-
-    @on (Button.Pressed, "#playb")
-    def play(self) -> None:
-        log.debug("Play sudoku mode selected!")
 
     @on(Click)
     def clicked(self):
@@ -60,10 +53,9 @@ class SudokuApp(App):
 
     def compose(self) -> ComposeResult:
         yield Footer()
-        #yield Menu()
         yield Header()
         #yield Cell("9", id="testcell")
-        yield Matrix(3, id="matrix")
+        #yield Matrix(3, id="matrix")
     
 
 if __name__=="__main__":

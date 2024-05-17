@@ -15,19 +15,22 @@
 
 from textual.app import ComposeResult
 from textual.containers import VerticalScroll
-from textual.widgets import Button, Static
+from textual.widgets import Button, Footer, Header
+from textual.screen import Screen
+from textual import on
+from textual import log
 
-
-class Menu(Static):
+class Menu(Screen):
 
     DEFAULT_CSS="""
-    #menu Button
+    VerticalScroll Button
     {
         margin:1;
         width: 50%;
         height: auto;
+        color: $text;
     }
-    #menu 
+    VerticalScroll
     {
     align: center middle;
     }
@@ -40,3 +43,13 @@ class Menu(Static):
             Button("Resolve", id="resolveb", variant="default"),
             id="menu"
         )
+            yield Footer()
+            yield Header()
+    
+    @on (Button.Pressed, "#resolveb")
+    def resolve(self) -> None:
+        log.debug("Resolve sudoku mode selected!")
+
+    @on (Button.Pressed, "#playb")
+    def play(self) -> None:
+        log.debug("Play sudoku mode selected!")
