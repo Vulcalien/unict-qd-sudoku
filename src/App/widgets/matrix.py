@@ -56,7 +56,6 @@ class Matrix(Grid):
           ]
      
 
-
      #Not to be confused with Cell.Modified
      class Modified(Message):
           def __init__(self, cell : Cell) -> None:
@@ -92,6 +91,7 @@ class Matrix(Grid):
      
      def number_of_no_state_cells(self) -> int:
            return len(self.query("Cell.no_state"))
+     
      
      def total_cells(self) -> int:
            return len(self.query("Cell"))
@@ -179,6 +179,7 @@ class Matrix(Grid):
           x=(x+1)%self.line_size
           self.move_to(x, y)
 
+
      def action_go_left(self) -> None:
           x,y=self._get_currently_focused_position()
           #This will work fine because python uses floored division
@@ -216,6 +217,7 @@ class Matrix(Grid):
           self.styles.grid_size_rows=self.line_size
           self.styles.grid_size_columns=self.line_size
           self.mode=mode
+
 
      def compose(self) -> ComposeResult:
            for y in range(self.line_size):
