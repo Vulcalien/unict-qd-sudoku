@@ -54,8 +54,8 @@ class Cell(Static):
     }
     &.correct.hint
     {
-          border: tall $primary
-          background: $primary
+          border: tall $primary;
+          background: $primary;
     }
     &.error
     {

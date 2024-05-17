@@ -14,14 +14,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Header, Button, Static
-from textual import log, events, on
+from textual.widgets import Footer, Header, Button
+from textual import on
 from textual.binding import Binding
-from textual.containers import VerticalScroll
-from src.App.widgets.cell import Cell
-from src.App.widgets.matrix import Matrix
-from src.App.widgets.menu import Menu
+from widgets.menu import Menu
+from widgets.resolve import Resolve
+from widgets.matrix import Matrix, Mode
 from textual.events import Click
+
+
 
 
 class SudokuApp(App):
@@ -32,14 +33,12 @@ class SudokuApp(App):
 
     BINDINGS = [Binding("ctrl+z", "suspend_process")]
 
+    SCREENS = {"menu" : Menu(), "resolve" : Resolve()}
+
     def on_mount(self) -> None:
-        self.push_screen(Menu())
+        self.push_screen("menu")
         #self.screen.styles.background="background-darken-3"
         #self.screen.styles.border= ("round", "background-lighten-3")
-
-    @on (Button.Pressed, "Menu Button")
-    def hide_menu(self) -> None:
-        self.query_one("Menu", Menu).display=False
     
 
     @on(Click)
@@ -57,6 +56,8 @@ class SudokuApp(App):
         #yield Cell("9", id="testcell")
         #yield Matrix(3, id="matrix")
     
+
+
 
 if __name__=="__main__":
     app = SudokuApp()

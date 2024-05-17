@@ -47,9 +47,11 @@ class Menu(Screen):
             yield Header()
     
     @on (Button.Pressed, "#resolveb")
-    def resolve(self) -> None:
+    def resolve(self, event : Button.Pressed) -> None:
         log.debug("Resolve sudoku mode selected!")
+        self.app.push_screen("resolve")
 
     @on (Button.Pressed, "#playb")
-    def play(self) -> None:
+    def play(self, event : Button.Pressed) -> None:
         log.debug("Play sudoku mode selected!")
+        

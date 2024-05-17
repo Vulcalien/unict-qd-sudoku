@@ -14,12 +14,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from enum import Enum, auto
-from src.App.widgets.cell import Cell
+from widgets.cell import Cell
 
 from textual.message import Message
 from textual import log
 from textual import on
-from textual.events import DescendantBlur, Blur
 from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.containers import Grid
