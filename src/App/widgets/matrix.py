@@ -115,6 +115,7 @@ class Matrix(Grid):
      
      def _get_currently_focused(self) -> Cell:
           return self.query_one("Cell:focus", Cell)
+     
 
      @on(Cell.Modified)
      def modified(self, modified : Cell.Modified) -> None:

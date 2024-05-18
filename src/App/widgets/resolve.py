@@ -13,21 +13,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from textual import on
+from textual import on, log
 from textual.binding import Binding
 from textual.screen import Screen
 from textual.widgets import Label, Button, Header, Footer
 from textual.app import ComposeResult
-from textual.containers import VerticalScroll, Center
+from textual.containers import Vertical, Center
 from widgets.matrix import Matrix, Mode
-from constants import MATRIX
-from textual.events import Key
+from variables import sudoku_matrix
+from textual.events import Key, Click
 
 
 SUDOKU_TEXT : str = """Welcome to Sudoku Resolve mode!
 Use wasd or the arrrow keys to move around.
 Use your keyboard to input a number.
-When you are ready, click solve and let the magic happen."""
+When you are ready, press enter and let the magic happen."""
 
 
 class Resolve(Screen):
@@ -55,7 +55,7 @@ class Resolve(Screen):
         height: auto;
         margin: 1;
     }
-    VerticalScroll
+    Vertical
     {
         align: center middle;
         content-align: center middle;
@@ -64,19 +64,46 @@ class Resolve(Screen):
 
 """
 
-    BINDINGS=[Binding("q,escape", "main_menu", "Go back to the main menu", show=True)]
+    BINDINGS=[
+         Binding("q,escape", "main_menu", "Go back to the main menu", show=True),
+         Binding("c", "clear", "Clear grid", show=True),
+         Binding("enter", "resolve", "Try to resolve the current grid", show=True)
+         ]
+
 
     def compose(self) -> ComposeResult:
-        with VerticalScroll():
+        with Vertical():
             with Center():
                  yield(Label(SUDOKU_TEXT))
-            yield(MATRIX)
-            with Center():
-                 yield(Button("Resolve current sudoku", variant="primary"))
+            yield(sudoku_matrix)
         yield Header()
         yield Footer()
             
+
+    def action_main_menu(self) -> None:
+            def clean_up(execute: bool) -> None:
+                 if(execute):
+                    sudoku_matrix.set_mode_and_clear(Mode.STATIC)
+                    self.app.pop_screen()
+                    self.query_one(r"#cell_0_0").focus()
+                    
+
+            self.app.push_screen("quit_screen", clean_up)
     
-    async def action_main_menu(self, event : Key):
-            self.app.pop_screen()
-            self.query_one("Matrix", Matrix).set_mode_and_clear(Mode.STATIC)
+
+    def action_clear(self) -> None:
+        def clear(execute : bool) -> None:
+            if(execute):
+                sudoku_matrix.set_mode_and_clear(Mode.STATIC)
+        
+
+        self.app.push_screen("clear_screen", clear)
+
+    def action_resolve(self) -> None:
+        self.app.push_screen("error_screen")
+
+
+    #Seems the only way to make sure clicking on the grid doesn't focus the previous cell
+    @on(Click)
+    def noOP(self, event : Click):
+        event.stop()

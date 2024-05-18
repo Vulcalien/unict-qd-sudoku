@@ -20,6 +20,9 @@ from textual.screen import Screen
 from textual import on
 from textual import log
 
+from variables import sudoku_matrix
+from widgets.matrix import Mode
+
 class Menu(Screen):
 
     DEFAULT_CSS="""
@@ -49,9 +52,11 @@ class Menu(Screen):
     @on (Button.Pressed, "#resolveb")
     def resolve(self, event : Button.Pressed) -> None:
         log.debug("Resolve sudoku mode selected!")
+        sudoku_matrix.set_mode_and_clear(Mode.STATIC)
         self.app.push_screen("resolve")
 
     @on (Button.Pressed, "#playb")
     def play(self, event : Button.Pressed) -> None:
         log.debug("Play sudoku mode selected!")
+        sudoku_matrix.clear_and_load(Mode.ACTIVE, [["1", "2", "3"]])
         

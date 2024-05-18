@@ -1,1 +1,1 @@
-__all__=["cell", "matrix", "menu"]
+__all__=["cell", "matrix", "menu", "resolve"]

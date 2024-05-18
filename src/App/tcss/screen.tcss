@@ -1,4 +1,4 @@
-Screen
+.SudokuScreen
 {
 background: $background-darken-3;
 border: thick $accent-darken-1;
