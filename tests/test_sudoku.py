@@ -246,3 +246,30 @@ def test_has_unique_solution(block_size: int, cells: list[list[int]],
             grid._Sudoku__set_fixed(x, y, cells[x][y])
 
     assert grid.has_unique_solution() == expected
+
+@pytest.mark.parametrize("block_size, cells, expected", [
+    (2, [
+        [None, 2,    None, 4   ],
+        [3,    4,    1,    None],
+        [None, None, 2,    None],
+        [None, None, None, 3   ],
+    ], [
+        [1, 2, 3, 4],
+        [3, 4, 1, 2],
+        [4, 3, 2, 1],
+        [2, 1, 4, 3],
+    ]),
+])
+def test_solve_grid(block_size: int, cells: list[list[int]],
+                    expected: list[list[int]]):
+    grid = Sudoku(block_size)
+
+    for y in range(block_size**2):
+        for x in range(block_size**2):
+            grid._Sudoku__set_fixed(x, y, cells[x][y])
+
+    grid._Sudoku__solve_grid()
+
+    for y in range(block_size**2):
+        for x in range(block_size**2):
+            assert grid.cells[x][y] == expected[x][y]
