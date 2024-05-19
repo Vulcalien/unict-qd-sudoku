@@ -13,15 +13,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from textual import on, log
+from textual import on
 from textual.binding import Binding
 from textual.screen import Screen
-from textual.widgets import Label, Button, Header, Footer
+from textual.widgets import Label, Header, Footer
 from textual.app import ComposeResult
 from textual.containers import Vertical, Center
-from widgets.matrix import Matrix, Mode
+from widgets.matrix import Mode
 from variables import sudoku_matrix
-from textual.events import Key, Click
+from textual.events import Click
 
 
 SUDOKU_TEXT : str = """Welcome to Sudoku Resolve mode!
@@ -85,7 +85,7 @@ class Resolve(Screen):
                  if(execute):
                     sudoku_matrix.set_mode_and_clear(Mode.STATIC)
                     self.app.pop_screen()
-                    self.query_one(r"#cell_0_0").focus()
+                    sudoku_matrix.query_cell(0,0).focus()
                     
 
             self.app.push_screen("quit_screen", clean_up)

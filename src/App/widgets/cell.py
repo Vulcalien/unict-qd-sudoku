@@ -23,8 +23,8 @@ from textual.widgets import Static
 class Cell(Static):
 
     class Modified(Message):
-         def __init__(self, id : str, old_digit : str) -> None:
-              self.id=id
+         def __init__(self, css_class : str, old_digit : str) -> None:
+              self.css_class=css_class
               self.old_digit=str  
               super().__init__()       
 
@@ -98,8 +98,11 @@ class Cell(Static):
          if(key.character is not None and "correct" not in self.classes and ((key.character>="1" and key.character<="9") or key.key=="backspace")):
                self.old_digit=self.digit
                self.digit=key.character
-               if(self.id is not None):
-                    self.post_message(self.Modified(self.id, self.old_digit))
+               if(self.classes is not None):
+                    for s in self.classes:
+                         if ("cell" in s):
+                              self.post_message(self.Modified(s, self.old_digit))
+                              break
 
     def watch_digit(self) -> None:
          self.update(self.digit)

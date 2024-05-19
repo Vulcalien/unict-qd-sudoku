@@ -15,9 +15,10 @@
 
 from textual.screen import Screen
 from textual.app import ComposeResult
+from textual.binding import Binding
 from textual.containers import Grid
-from textual.widgets import Placeholder
-from variables import sudoku_matrix
+from textual.widgets import Placeholder, Header, Footer
+from widgets.matrix import Matrix
 
 class Play(Screen):
     DEFAULT_CSS="""
@@ -27,6 +28,8 @@ class Play(Screen):
     Matrix
     {
         column-span: 3;
+        width: 1fr;
+        height: 1fr;
     }
     Placeholder
     {
@@ -34,9 +37,17 @@ class Play(Screen):
         height: auto;
     }
     """
+
+    BINDINGS=[Binding("q,escape", "main_menu", "Go back to main menu", show=True)]
+
     def compose(self) -> ComposeResult:
         with Grid():
             yield Placeholder(id="state_text")
             yield Placeholder(id="how_to")
             yield Placeholder(id="timer")
-            yield sudoku_matrix
+            yield Matrix(3)
+        yield Header()
+        yield Footer()
+
+    def action_main_menu(self) -> None:
+        self.app.pop_screen()

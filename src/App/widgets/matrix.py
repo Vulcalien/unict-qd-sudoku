@@ -66,7 +66,7 @@ class Matrix(Grid):
 
      def to_iterable(self) -> Iterable[Iterable[str]]:
           for x in range(self.line_size):
-                    yield (cell.digit for cell in (self.query_one(f"#cell_{x}_{y}", Cell) for y in range(self.line_size)))
+                    yield (cell.digit for cell in (self.query_one(f".cell_{x}_{y}", Cell) for y in range(self.line_size)))
 
      def to_list(self) -> List[List[str]]:
            """Creates a list of lists (Matrix) that represents the grid."""
@@ -108,14 +108,16 @@ class Matrix(Grid):
 
      def move_to(self, x: int, y:int) -> None:
           """Sets the focus to the cell at x y position"""
-          self.query_one(f"#cell_{x}_{y}",Cell).focus()
+          self.query_one(f".cell_{x}_{y}",Cell).focus()
 
 
      def _extract_position(self, cell : Cell) -> tuple[int, int]:
           """Extracts x and y coordinates from a cell"""
-          if(cell.id is not None):
-               s=cell.id.split("_", maxsplit=3)
-               return (int(s[1]), int(s[2]))
+          if(cell.classes is not None):
+               for s in cell.classes: # type: ignore
+                     if("cell" in s):
+                         s=s.split("_")
+                         return (int(s[1]), int(s[2]))    
           #TODO: Add proper exception handling
           return (-1,-1)
      
@@ -137,7 +139,7 @@ class Matrix(Grid):
      
      no_state if the user has inserted an answer but it wasn't checked if it respects the rules of sudoku or that the answer was deleted"""
           log.debug(self.to_list())
-          modif_cell=self.query_one("#"+modified.id, Cell)
+          modif_cell=self.query_one("."+modified.css_class, Cell)
           if(self.mode is Mode.STATIC):
                 return
           log.debug(self._sudoku)
@@ -200,7 +202,7 @@ class Matrix(Grid):
 
 
      def query_cell(self, x: int, y:int) -> Cell:
-          return self.query_one(f"#cell_{x}_{y}", Cell)
+          return self.query_one(f".cell_{x}_{y}", Cell)
      
      
      def _clear(self) -> None:
@@ -237,4 +239,4 @@ class Matrix(Grid):
      def compose(self) -> ComposeResult:
            for x in range(self.line_size):
                  for y in range(self.line_size):
-                       yield Cell(" ", id=f"cell_{x}_{y}")
+                       yield Cell(" ", classes=f"cell_{x}_{y}")
