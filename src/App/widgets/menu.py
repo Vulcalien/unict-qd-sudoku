@@ -20,8 +20,10 @@ from textual.screen import Screen
 from textual import on
 from textual import log
 
-from variables import sudoku_matrix
+from widgets.cell import Cell
+from variables import sudoku_matrix, SUDOKU_SIZE
 from widgets.matrix import Mode
+from sudoku import Sudoku
 
 class Menu(Screen):
 
@@ -58,4 +60,10 @@ class Menu(Screen):
     @on (Button.Pressed, "#playb")
     def play(self, event : Button.Pressed) -> None:
         log.debug("Play sudoku mode selected!")
+        su=Sudoku(SUDOKU_SIZE)
+        hints= (SUDOKU_SIZE**4)-su.generate_grid(65)
+        sudoku_matrix.compose()
+        log.debug(f"{len(sudoku_matrix.query("Cell")) = }")
+        sudoku_matrix.clear_and_load(Mode.ACTIVE, su)
+        self.app.push_screen("play")
         
