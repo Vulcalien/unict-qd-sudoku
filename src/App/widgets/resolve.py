@@ -19,8 +19,8 @@ from textual.screen import Screen
 from textual.widgets import Label, Header, Footer
 from textual.app import ComposeResult
 from textual.containers import Vertical, Center
-from widgets.matrix import Mode
-from variables import sudoku_matrix
+from widgets.matrix import Mode, Matrix
+from variables import SUDOKU_SIZE
 from textual.events import Click
 
 
@@ -75,7 +75,7 @@ class Resolve(Screen):
         with Vertical():
             with Center():
                  yield(Label(SUDOKU_TEXT))
-            yield(sudoku_matrix)
+            yield Matrix(SUDOKU_SIZE, Mode.STATIC)
         yield Header()
         yield Footer()
             
@@ -83,9 +83,10 @@ class Resolve(Screen):
     def action_main_menu(self) -> None:
             def clean_up(execute: bool) -> None:
                  if(execute):
-                    sudoku_matrix.set_mode_and_clear(Mode.STATIC)
+                    m=self.query_one("Matrix", Matrix)
+                    m.set_mode_and_clear(Mode.STATIC)
                     self.app.pop_screen()
-                    sudoku_matrix.query_cell(0,0).focus()
+                    m.query_cell(0,0).focus()
                     
 
             self.app.push_screen("quit_screen", clean_up)
@@ -94,7 +95,7 @@ class Resolve(Screen):
     def action_clear(self) -> None:
         def clear(execute : bool) -> None:
             if(execute):
-                sudoku_matrix.set_mode_and_clear(Mode.STATIC)
+                self.query_one("Matrix", Matrix).set_mode_and_clear(Mode.STATIC)
         
 
         self.app.push_screen("clear_screen", clear)

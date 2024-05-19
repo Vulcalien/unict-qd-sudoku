@@ -15,7 +15,7 @@
 
 from textual.screen import ModalScreen
 from textual.widgets import Button, Label
-from textual.containers import VerticalScroll, Center
+from textual.containers import VerticalScroll
 from textual.app import ComposeResult
 from textual import on
 
