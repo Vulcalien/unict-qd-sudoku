@@ -81,7 +81,12 @@ class Matrix(Grid):
      def clear_and_load(self, mode : Mode, sudoku : Sudoku) -> None:
           self.set_mode_and_clear(mode)
           assert sudoku.block_size==self.line_size**2
-          self._load([[str(sudoku.get_cell(x,y)) if (sudoku.is_fixed(x,y)) else " " for y in range(self.line_size)] for x in range(self.line_size)])
+          self._sudoku=sudoku
+          if(self.mode is Mode.ACTIVE):
+                self._load([[str(self._sudoku.get_cell(x,y)) if (self._sudoku.is_fixed(x,y)) else " " for y in range(self.line_size)] for x in range(self.line_size)])
+          else:
+               self._load([[str(self._sudoku.get_cell(x,y)) for y in range(self.line_size)] for x in range(self.line_size)])
+
 
 
      def number_of_correct_cells(self) -> int:
@@ -141,7 +146,7 @@ class Matrix(Grid):
                return
           x,y=self._extract_position(modif_cell)
           #Note: the modif_cell.has_class("correct")==True case is skipped because it is handled by the cell class itself
-          if(self.is_correct(x,y)):
+          if(self._is_correct(x,y)):
                 modif_cell.add_class("correct", update=True)
                 modif_cell.remove_class("error", update=True)
                 modif_cell.remove_class("no_state", update=True)
@@ -152,10 +157,10 @@ class Matrix(Grid):
                 self.post_message(self.Modified(modif_cell))
           
 
-     def is_correct(self, x:int, y:int) -> None:
-           """Placeholder function"""
-           pass
-     
+     def _is_correct(self, x:int, y:int) -> bool:
+           """Checks if the cell has the correct digit"""
+           return self.query_cell(x,y)==str(self._sudoku.get_cell(x,y))
+
 
      def move_forward(self, cell : Cell) -> None:
           x,y=self._extract_position(cell)
