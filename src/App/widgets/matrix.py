@@ -80,12 +80,13 @@ class Matrix(Grid):
      
      def clear_and_load(self, mode : Mode, sudoku : Sudoku) -> None:
           self.set_mode_and_clear(mode)
-          assert sudoku.block_size==self.line_size**2
+          assert sudoku.block_size**4==self.line_size**2
           self._sudoku=sudoku
+          #Note: the Sudoku class seems to use Column Major order, so we will have to retrieve the elements that way
           if(self.mode is Mode.ACTIVE):
-                self._load([[str(self._sudoku.get_cell(x,y)) if (self._sudoku.is_fixed(x,y)) else " " for y in range(self.line_size)] for x in range(self.line_size)])
+                self._load([[str(self._sudoku.get_cell(x,y)) if (self._sudoku.is_fixed(x,y)) else " " for x in range(self.line_size)] for y in range(self.line_size)])
           else:
-               self._load([[str(self._sudoku.get_cell(x,y)) for y in range(self.line_size)] for x in range(self.line_size)])
+               self._load([[str(self._sudoku.get_cell(x,y)) for x in range(self.line_size)] for y in range(self.line_size)])
 
 
 
@@ -139,6 +140,7 @@ class Matrix(Grid):
           modif_cell=self.query_one("#"+modified.id, Cell)
           if(self.mode is Mode.STATIC):
                 return
+          log.debug(self._sudoku)
           if(modif_cell.digit==" "):
                modif_cell.remove_class("error", update=True)
                modif_cell.add_class("no_state", update=True)
@@ -159,7 +161,8 @@ class Matrix(Grid):
 
      def _is_correct(self, x:int, y:int) -> bool:
            """Checks if the cell has the correct digit"""
-           return self.query_cell(x,y)==str(self._sudoku.get_cell(x,y))
+           #Swap the coordinates in the sudoku object since it uses Column Major order
+           return self.query_cell(x,y)==str(self._sudoku.get_cell(y,x))
 
 
      def move_forward(self, cell : Cell) -> None:
@@ -217,6 +220,9 @@ class Matrix(Grid):
                        cell=self.query_cell(x,y)
                        cell.digit=matrix[x][y]
                        cell.add_class(*class_str, update=True)
+           log.debug(self.to_list())
+           log.debug(self._sudoku)
+          
 
 
      def __init__(self, size : int, mode : Mode = Mode.STATIC, *children: Widget, name: str | None = None, id: str | None = None, classes: str | None = None, disabled: bool = False) -> None:
