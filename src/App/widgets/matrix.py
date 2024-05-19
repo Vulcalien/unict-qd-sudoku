@@ -91,20 +91,34 @@ class Matrix(Grid):
 
 
      def number_of_correct_cells(self) -> int:
+           """Returns the number of cells that are labeled as correct (Input on these cells is ignored)"""
            return len(self.query("Cell.correct"))
      
      
      def number_of_error_cells(self) -> int:
+           """Returns the number of wrong guesses currently present on the board"""
            return len(self.query("Cell.error"))
      
      
      def number_of_no_state_cells(self) -> int:
+           """Returns the number of blank cells on the board or total_cells() when self.mode==Mode.STATIC"""
            return len(self.query("Cell.no_state"))
      
      
      def total_cells(self) -> int:
+           """Returns the number of cells on the board"""
            return len(self.query("Cell"))
      
+
+     def number_of_hints(self) -> int:
+           """Returns the number of hints. Hints are correct cells which have not been given by the user."""
+           return len(self.query("Cell.hints"))
+     
+
+     def number_of_correct_guesses(self) -> int:
+          """Returns the number of correct guesses made by the user"""
+          return self.number_of_correct_cells()-self.number_of_hints()
+
 
      def move_to(self, x: int, y:int) -> None:
           """Sets the focus to the cell at x y position"""
