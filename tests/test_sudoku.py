@@ -73,11 +73,15 @@ def test_get_symbols(block_size: int):
     (3, 2, 5, 1),
     (2, 2, 2, 2),
     (2, 0, 0, 6),
+    (3, -5, 4, None),
+    (3, -5, -4, None),
+    (3, 4, 9, None),
 ])
 def test_get_cell(block_size: int, x: int, y: int, val: int):
     grid = Sudoku(block_size)
 
-    grid.cells[x][y] = val
+    if x >= 0 and x < block_size**2 and y >= 0 and y < block_size**2:
+        grid.cells[x][y] = val
 
     assert grid.get_cell(x, y) == val
 
@@ -89,11 +93,16 @@ def test_get_cell(block_size: int, x: int, y: int, val: int):
     (3, 2, 5, False),
     (2, 2, 2, True),
     (2, 0, 0, False),
+    (3, 8, 8, True),
+    (3, -1, 0, False),
+    (3, -1, -1, False),
+    (3, 0, 9, False),
 ])
 def test_is_fixed(block_size: int, x: int, y: int, val: bool):
     grid = Sudoku(block_size)
 
-    grid.fixed[x][y] = val
+    if x >= 0 and x < block_size**2 and y >= 0 and y < block_size**2:
+        grid.fixed[x][y] = val
 
     assert grid.is_fixed(x, y) == val
 
@@ -208,3 +217,32 @@ def test_repr(block_size: int, cell: tuple[int, int, int],
     grid._Sudoku__set_fixed(fixed[0], fixed[1], fixed[2])
 
     assert str(grid) == expected_str
+
+@pytest.mark.parametrize("block_size, cells, expected", [
+    (3, [
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None],
+    ], False),
+    (2, [
+        [None, 2,    None, 4   ],
+        [3,    4,    1,    None],
+        [None, None, 2,    None],
+        [None, None, None, 3   ],
+    ], True),
+])
+def test_has_unique_solution(block_size: int, cells: list[list[int]],
+                             expected: bool):
+    grid = Sudoku(block_size)
+
+    for y in range(block_size**2):
+        for x in range(block_size**2):
+            grid._Sudoku__set_fixed(x, y, cells[x][y])
+
+    assert grid.has_unique_solution() == expected
