@@ -49,12 +49,10 @@ class Cell(Static):
     color: $text;
     &.correct
     {
-          border: tall $success;
           background: $success;
     }
     &.correct.hint
     {
-          border: tall $primary;
           background: $primary;
     }
     &.error

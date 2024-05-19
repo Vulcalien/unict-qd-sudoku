@@ -57,11 +57,5 @@ class Menu(Screen):
 
     @on (Button.Pressed, "#playb")
     def play(self, event : Button.Pressed) -> None:
-        sudoku=Sudoku(SUDOKU_SIZE)
-        hints=sudoku.block_size**4-sudoku.generate_grid(65)
-        sudoku_matrix.clear_and_load(Mode.ACTIVE, sudoku)
-        
-        log.debug("Play sudoku mode selected!")
-        #log.debug(f"{len(sudoku_matrix.query("Cell")) = }")
         self.app.push_screen("play")
         

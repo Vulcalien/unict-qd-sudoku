@@ -16,38 +16,46 @@
 from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Grid
+from textual.containers import Grid, Center, HorizontalScroll
 from textual.widgets import Placeholder, Header, Footer
-from widgets.matrix import Matrix
+from variables import SUDOKU_SIZE
+from sudoku import Sudoku
+from widgets.matrix import Matrix, Mode
 
 class Play(Screen):
     DEFAULT_CSS="""
-    Grid {
-        grid-size: 3 2;
-    }
     Matrix
     {
-        column-span: 3;
         width: 1fr;
         height: 1fr;
+        align: center middle;
     }
     Placeholder
     {
         width: 1fr;
-        height: auto;
+        height: 1;
     }
     """
 
     BINDINGS=[Binding("q,escape", "main_menu", "Go back to main menu", show=True)]
 
     def compose(self) -> ComposeResult:
-        with Grid():
+        with HorizontalScroll():
             yield Placeholder(id="state_text")
             yield Placeholder(id="how_to")
             yield Placeholder(id="timer")
-            yield Matrix(3)
+        with Center():
+            yield Matrix(SUDOKU_SIZE, Mode.ACTIVE)
         yield Header()
         yield Footer()
 
+
+    def on_mount(self):
+        sudoku=Sudoku(SUDOKU_SIZE)
+        sudoku.generate_grid(65)
+        self.query_one("Matrix", Matrix).clear_and_load(Mode.ACTIVE, sudoku)
+
+
     def action_main_menu(self) -> None:
         self.app.pop_screen()
+        self.on_mount()

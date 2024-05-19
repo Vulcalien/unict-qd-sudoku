@@ -164,7 +164,7 @@ class Matrix(Grid):
      def _is_correct(self, x:int, y:int) -> bool:
            """Checks if the cell has the correct digit"""
            #Swap the coordinates in the sudoku object since it uses Column Major order
-           return self.query_cell(x,y)==str(self._sudoku.get_cell(y,x))
+           return self.query_cell(x,y).digit==str(self._sudoku.get_cell(y,x))
 
 
      def move_forward(self, cell : Cell) -> None:
@@ -212,18 +212,15 @@ class Matrix(Grid):
 
      
      def _load(self, matrix : List[List[str]]) -> None:
-           if(self.mode is Mode.STATIC):
-                 class_str="no_state"
-           else:
-                 #hint is only used when loading from an external matrix in ACTIVE mode
-                 class_str=["correct", "hint"]
-           for x in range(self.line_size):
-                 for y in range(self.line_size):
-                       cell=self.query_cell(x,y)
-                       cell.digit=matrix[x][y]
-                       cell.add_class(*class_str, update=True)
-           log.debug(self.to_list())
-           log.debug(self._sudoku)
+          #hint is only used when loading from an external matrix in ACTIVE mode
+          class_str=["correct", "hint"]
+          for x in range(self.line_size):
+               for y in range(self.line_size):
+                    cell=self.query_cell(x,y)
+                    cell.digit=matrix[x][y]
+                    cell.add_class(*class_str if (self.mode is Mode.ACTIVE and cell.digit!=" ") else "no_state", update=True)
+          log.debug(self.to_list())
+          log.debug(self._sudoku)
           
 
 
