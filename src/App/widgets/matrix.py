@@ -24,6 +24,8 @@ from textual.binding import Binding
 from textual.containers import Grid
 from textual.widget import Widget
 from typing import Iterable, List
+from sudoku import Sudoku
+
 
 class Mode(Enum):
      """Indicates the current sudoku mode being used.
@@ -63,8 +65,8 @@ class Matrix(Grid):
 
 
      def to_iterable(self) -> Iterable[Iterable[str]]:
-          for y in range(self.line_size):
-                    yield (cell.digit for cell in (self.query_one(f"#cell_{x}_{y}", Cell) for x in range(self.line_size)))
+          for x in range(self.line_size):
+                    yield (cell.digit for cell in (self.query_one(f"#cell_{x}_{y}", Cell) for y in range(self.line_size)))
 
      def to_list(self) -> List[List[str]]:
            """Creates a list of lists (Matrix) that represents the grid."""
@@ -76,9 +78,11 @@ class Matrix(Grid):
           self._clear()
      
      
-     def clear_and_load(self, mode : Mode, matrix : List[List[str]]) -> None:
+     def clear_and_load(self, mode : Mode, sudoku : Sudoku) -> None:
           self.set_mode_and_clear(mode)
-          self._load(matrix)
+          assert sudoku.block_size==self.line_size**2
+          self._load([[str(sudoku.get_cell(x,y)) if (sudoku.is_fixed(x,y)) else " " for y in range(self.line_size)] for x in range(self.line_size)])
+
 
      def number_of_correct_cells(self) -> int:
            return len(self.query("Cell.correct"))
@@ -155,35 +159,35 @@ class Matrix(Grid):
 
      def move_forward(self, cell : Cell) -> None:
           x,y=self._extract_position(cell)
-          x=(x+1)%self.line_size
-          if(x==0):
-               y=(y+1)%self.line_size
+          y=(y+1)%self.line_size
+          if(y==0):
+               x=(x+1)%self.line_size
           self.move_to(x,y)
 
 
      def action_go_up(self) -> None:
           x,y=self._get_currently_focused_position()
-          y=(y-1)%self.line_size
+          x=(x-1)%self.line_size
           self.move_to(x, y)
 
 
      def action_go_down(self) -> None:
           x,y=self._get_currently_focused_position()
           #This will work fine because python uses floored division
-          y=(y+1)%self.line_size
+          x=(x+1)%self.line_size
           self.move_to(x, y)
 
 
      def action_go_right(self) -> None:
           x,y=self._get_currently_focused_position()
-          x=(x+1)%self.line_size
+          y=(y+1)%self.line_size
           self.move_to(x, y)
 
 
      def action_go_left(self) -> None:
           x,y=self._get_currently_focused_position()
           #This will work fine because python uses floored division
-          x=(x-1)%self.line_size
+          y=(y-1)%self.line_size
           self.move_to(x, y)
 
 
@@ -220,6 +224,6 @@ class Matrix(Grid):
 
 
      def compose(self) -> ComposeResult:
-           for y in range(self.line_size):
-                 for x in range(self.line_size):
+           for x in range(self.line_size):
+                 for y in range(self.line_size):
                        yield Cell(" ", id=f"cell_{x}_{y}")

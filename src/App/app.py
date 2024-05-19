@@ -13,6 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import pathlib
+import sys
+sys.path.append(str(pathlib.Path(__file__).parent.parent)) #Add directory above so the sudoku module can be imported
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, Button
 from textual import on
@@ -23,7 +26,6 @@ from widgets.matrix import Matrix, Mode
 from widgets.confirm_screen import QuitScreen, ClearScreen
 from widgets.error_screen import ErrorScreen
 from textual.events import Click
-
 
 
 

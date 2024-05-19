@@ -58,5 +58,4 @@ class Menu(Screen):
     @on (Button.Pressed, "#playb")
     def play(self, event : Button.Pressed) -> None:
         log.debug("Play sudoku mode selected!")
-        sudoku_matrix.clear_and_load(Mode.ACTIVE, [["1", "2", "3"]])
         
