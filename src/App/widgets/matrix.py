@@ -112,7 +112,7 @@ class Matrix(Grid):
 
      def number_of_hints(self) -> int:
            """Returns the number of hints. Hints are correct cells which have not been given by the user."""
-           return len(self.query("Cell.hints"))
+           return len(self.query("Cell.hint"))
      
 
      def number_of_correct_guesses(self) -> int:
@@ -222,7 +222,7 @@ class Matrix(Grid):
      def _clear(self) -> None:
                for cell in self.query("Cell").results(Cell):
                      cell.digit=" "
-                     cell.remove_class("correct", "error", "no_state", update=True)
+                     cell.remove_class("correct", "error", "no_state", "hint", update=True)
 
      
      def _load(self, matrix : List[List[str]]) -> None:
