@@ -13,20 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from textual import on, work, log
-from textual.message import Message
-from textual.worker import Worker, get_current_worker, WorkerState
+from textual import on
 from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.events import Click
 from textual.binding import Binding
-from textual.containers import Grid, Center, HorizontalScroll, VerticalScroll
-from textual.widgets import Placeholder, Header, Footer, Label, Static
+from textual.containers import Grid
+from textual.widgets import Header, Footer, Static
 from textual.reactive import Reactive
 from variables import SUDOKU_SIZE
 from sudoku import Sudoku
 from widgets.matrix import Matrix, Mode
-from widgets.confirm_screen import QuitScreen
 
 class Play(Screen):
 

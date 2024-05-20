@@ -20,10 +20,6 @@ from textual.screen import Screen
 from textual import on
 from textual import log
 
-from variables import sudoku_matrix, SUDOKU_SIZE
-from widgets.matrix import Mode
-from sudoku import Sudoku
-from widgets.play import Play
 
 class Menu(Screen):
 
