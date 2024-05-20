@@ -23,7 +23,7 @@ from textual.binding import Binding
 from widgets.menu import Menu
 from widgets.resolve import Resolve
 from widgets.play import Play
-from widgets.confirm_screen import QuitScreen, ClearScreen
+from widgets.confirm_screen import QuitScreen, ClearScreen, RegenerateScreen
 from widgets.error_screen import ErrorScreen
 from textual.events import Click
 
@@ -37,7 +37,7 @@ class SudokuApp(App):
 
     BINDINGS = [Binding("ctrl+z", "suspend_process")]
 
-    SCREENS = {"menu" : Menu(classes="SudokuScreen"), "play" : Play(classes="SudokuScreen"), "resolve" : Resolve(classes="SudokuScreen"), "quit_screen" : QuitScreen(), "clear_screen" : ClearScreen(), "error_screen" : ErrorScreen()}
+    SCREENS = {"menu" : Menu(classes="SudokuScreen"), "play" : Play(classes="SudokuScreen"), "resolve" : Resolve(classes="SudokuScreen"), "quit_screen" : QuitScreen(), "clear_screen" : ClearScreen(), "error_screen" : ErrorScreen(), "regenerate_screen" : RegenerateScreen()}
 
     def on_mount(self) -> None:
         self.push_screen(Menu(classes="SudokuScreen"))

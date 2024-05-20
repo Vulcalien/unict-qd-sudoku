@@ -72,6 +72,15 @@ class Play(Screen):
                     
         self.app.push_screen("quit_screen", clean_up)
 
+    
+    def action_regenerate(self) -> None:
+            def regen(execute: bool) -> None:
+                if(execute):
+                    self.gen_and_load()
+
+
+            self.app.push_screen("regenerate_screen", regen)
+
 
     def watch_errors(self) -> None:
         self.update_status()

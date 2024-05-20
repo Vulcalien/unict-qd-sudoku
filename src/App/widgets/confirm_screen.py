@@ -83,3 +83,7 @@ class QuitScreen(ConfirmScreen):
 class ClearScreen(ConfirmScreen):
      def __init__(self, name: str | None = None, id: str | None = None) -> None:
           super().__init__("Are you sure you want to clear the grid? Progress will be lost!", "Yes", "No", name, id, "ConfirmScreen")
+
+class RegenerateScreen(ConfirmScreen):
+    def __init__(self, name: str | None = None, id: str | None = None) -> None:
+        super().__init__("Are you sure you want to regenerate the puzzle? Progress will be lost!","Yes","No", name, id, "ConfirmScreen")
