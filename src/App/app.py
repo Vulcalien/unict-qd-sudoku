@@ -31,7 +31,7 @@ from textual.events import Click
 
 class SudokuApp(App):
 
-    CSS_PATH=["./tcss/screen.tcss"]
+    CSS_PATH=["./tcss/screen.tcss", "./tcss/play.tcss"]
 
     TITLE="Sudoku TUI"
 
