@@ -41,7 +41,7 @@ class Menu(Screen):
     def compose(self) -> ComposeResult:
             yield VerticalScroll(
             Button("Play", id="playb", variant="primary"),
-            Button("Resolve", id="resolveb", variant="default"),
+            Button("Resolve", id="resolveb", variant="default", disabled=True),
             id="menu"
         )
             yield Footer()
