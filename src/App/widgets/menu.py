@@ -23,6 +23,7 @@ from textual import log
 from variables import sudoku_matrix, SUDOKU_SIZE
 from widgets.matrix import Mode
 from sudoku import Sudoku
+from widgets.play import Play
 
 class Menu(Screen):
 
@@ -58,4 +59,4 @@ class Menu(Screen):
     @on (Button.Pressed, "#playb")
     def play(self, event : Button.Pressed) -> None:
         self.app.push_screen("play")
-        
+    

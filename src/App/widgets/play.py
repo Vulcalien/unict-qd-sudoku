@@ -13,49 +13,89 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from textual import on, work, log
+from textual.message import Message
+from textual.worker import Worker, get_current_worker, WorkerState
 from textual.screen import Screen
 from textual.app import ComposeResult
+from textual.events import Click
 from textual.binding import Binding
-from textual.containers import Grid, Center, HorizontalScroll
-from textual.widgets import Placeholder, Header, Footer
+from textual.containers import Grid, Center, HorizontalScroll, VerticalScroll
+from textual.widgets import Placeholder, Header, Footer, Label, Static
+from textual.reactive import Reactive
 from variables import SUDOKU_SIZE
 from sudoku import Sudoku
 from widgets.matrix import Matrix, Mode
+from widgets.confirm_screen import QuitScreen
 
 class Play(Screen):
-    DEFAULT_CSS="""
-    Matrix
-    {
-        width: 1fr;
-        height: 1fr;
-        align: center middle;
-    }
-    Placeholder
-    {
-        width: 1fr;
-        height: 1;
-    }
-    """
 
-    BINDINGS=[Binding("q,escape", "main_menu", "Go back to main menu", show=True)]
+    
+    remaining_cells : Reactive[int]=Reactive(0)
+    errors : Reactive[int]=Reactive(0)
+
+
+
+    BINDINGS=[Binding("q,escape", "main_menu", "Go back to main menu", show=True),
+              Binding("r", "regenerate", "Regenerate puzzle", show=True)]
 
     def compose(self) -> ComposeResult:
-        with HorizontalScroll():
-            yield Placeholder(id="state_text")
-            yield Placeholder(id="how_to")
-            yield Placeholder(id="timer")
-        with Center():
-            yield Matrix(SUDOKU_SIZE, Mode.ACTIVE)
+        with Grid():
+            yield Static(f"[bold green]Remaining Cells: [/bold green][bold]{self.remaining_cells}[/bold]{"\r\n"}[bold red]Errors: [/bold red][bold]{self.errors}[/bold]",id="status", classes="PlayText")
+            yield Static("Welcome to sudoku! Move the cells with wasd or the arrow keys. Input a digit with your keyboard. Have Fun!",id="how_to", classes="PlayText")
+            yield Static(id="timer", classes="PlayText")
+            yield Matrix(SUDOKU_SIZE, Mode.ACTIVE, id="play_matrix")
         yield Header()
         yield Footer()
 
 
-    def on_mount(self):
-        sudoku=Sudoku(SUDOKU_SIZE)
+    def gen_and_load(self) -> None:
+        sudoku : Sudoku = Sudoku(SUDOKU_SIZE)
         sudoku.generate_grid(65)
-        self.query_one("Matrix", Matrix).clear_and_load(Mode.ACTIVE, sudoku)
+        m : Matrix = self.query_one("Matrix", Matrix)
+        m.clear_and_load(Mode.ACTIVE, sudoku)
+        self.errors=0
+        self.remaining_cells=SUDOKU_SIZE**4-m.number_of_hints()
+        
+
+    def on_mount(self) -> None:
+        self.gen_and_load()
 
 
     def action_main_menu(self) -> None:
-        self.app.pop_screen()
-        self.on_mount()
+        def clean_up(execute: bool) -> None:
+                if(execute):
+                    m=self.query_one("Matrix", Matrix)
+                    self.gen_and_load()
+                    self.app.pop_screen()
+                    m.query_cell(0,0).focus()
+                    
+        self.app.push_screen("quit_screen", clean_up)
+
+
+    def watch_errors(self) -> None:
+        self.update_status()
+
+
+    def watch_remaining_cells(self) -> None:
+        self.update_status()
+        if(self.remaining_cells==0):
+            pass #TODO: Make something happen when the user completes the puzzle
+
+    def update_status(self) -> None:
+        self.query_one("#status", Static).update(f"[bold green]Remaining Cells: [/bold green][bold]{self.remaining_cells}[/bold]{"\n"}[bold red]Errors: [/bold red][bold]{self.errors}[/bold]")
+
+
+    @on(Matrix.Modified)
+    def modified_matrix(self, modified : Matrix.Modified) -> None:
+        cell=modified.cell
+        if cell.has_class("error"):
+            self.errors+=1
+        elif cell.has_class("correct"):
+            self.remaining_cells-=1
+    
+
+    #Seems the only way to make sure clicking on the grid doesn't focus the previous cell
+    @on(Click)
+    def noOP(self, event : Click):
+        event.stop()
