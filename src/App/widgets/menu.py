@@ -35,13 +35,17 @@ class Menu(Screen):
     {
     align: center middle;
     }
+    #resolveb
+    {
+        display: none;
+    }
     """
 
 
     def compose(self) -> ComposeResult:
             yield VerticalScroll(
             Button("Play", id="playb", variant="primary"),
-            Button("Resolve", id="resolveb", variant="default", disabled=True),
+            Button("Solve", id="resolveb", variant="default", disabled=True),
             id="menu"
         )
             yield Footer()

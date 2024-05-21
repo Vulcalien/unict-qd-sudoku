@@ -24,7 +24,7 @@ from variables import SUDOKU_SIZE
 from textual.events import Click
 
 
-SUDOKU_TEXT : str = """Welcome to Sudoku Resolve mode!
+SUDOKU_TEXT : str = """Welcome to Sudoku solve mode!
 Use wasd or the arrrow keys to move around.
 Use your keyboard to input a number.
 When you are ready, press enter and let the magic happen."""
