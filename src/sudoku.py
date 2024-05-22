@@ -198,15 +198,21 @@ class Sudoku:
         # no symbol could be placed
         return False
 
+    def __find_fixed_cell(self) -> tuple[int, int]:
+        for y in random.sample(range(self.size), k=self.size):
+            for x in random.sample(range(self.size), k=self.size):
+                if self.fixed[x][y]:
+                    return (x, y)
+        return (-1, -1)
+
     def __try_to_clear_random_cell(self) -> bool:
         """attempt to remove one symbol from the grid while maintaining
         uniqueness of the solution"""
 
         # find (x, y) coordinates of a random fixed cell
-        for y in random.sample(range(self.size), k=self.size):
-            for x in random.sample(range(self.size), k=self.size):
-                if self.fixed[x][y]:
-                    break
+        x, y = self.__find_fixed_cell()
+        if not self.is_cell_inside(x, y):
+            return False
 
         # clear the cell
         symbol = self.cells[x][y]
