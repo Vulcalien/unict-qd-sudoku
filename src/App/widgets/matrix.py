@@ -105,6 +105,10 @@ class Matrix(Grid):
            return len(self.query("Cell.no_state"))
      
      
+     def _get_no_state_cells(self):
+           return self.query("Cell.no_state").results(Cell)
+
+
      def total_cells(self) -> int:
            """Returns the number of cells on the board"""
            return len(self.query("Cell"))
@@ -122,6 +126,7 @@ class Matrix(Grid):
 
      def move_to(self, x: int, y:int) -> None:
           """Sets the focus to the cell at x y position"""
+          log.debug(f"Previous cell: {self._get_currently_focused_position() = }")
           self.query_one(f".cell_{x}_{y}",Cell).focus()
 
 
@@ -232,7 +237,10 @@ class Matrix(Grid):
                for y in range(self.line_size):
                     cell=self.query_cell(x,y)
                     cell.digit=matrix[x][y]
-                    cell.add_class(*class_str if (self.mode is Mode.ACTIVE and cell.digit!=" ") else "no_state", update=True)
+                    if(self.mode is Mode.ACTIVE and cell.digit!=" "):
+                         cell.add_class(*class_str, update=True)
+                    else:
+                          cell.add_class("no_state", update=True)
           log.debug(self.to_list())
           log.debug(self._sudoku)
           
