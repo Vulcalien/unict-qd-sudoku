@@ -37,7 +37,15 @@ class SudokuApp(App):
 
     BINDINGS = [Binding("ctrl+z", "suspend_process")]
 
-    SCREENS = {"menu" : Menu(classes="SudokuScreen"), "play" : Play(classes="SudokuScreen"), "resolve" : Resolve(classes="SudokuScreen"), "quit_screen" : QuitScreen(), "clear_screen" : ClearScreen(), "error_screen" : ErrorScreen(), "regenerate_screen" : RegenerateScreen()}
+    SCREENS = {
+        "menu" : Menu(classes="SudokuScreen"), 
+        "play" : Play(classes="SudokuScreen"), 
+        "resolve" : Resolve(classes="SudokuScreen"),
+        "quit_screen" : QuitScreen(),
+        "clear_screen" : ClearScreen(),
+        "error_screen" : ErrorScreen(),
+        "regenerate_screen" : RegenerateScreen()
+        }
 
     def on_mount(self) -> None:
         self.push_screen(Menu(classes="SudokuScreen"))
