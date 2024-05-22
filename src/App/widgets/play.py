@@ -38,7 +38,7 @@ class Play(Screen):
 
     def compose(self) -> ComposeResult:
         with Grid():
-            yield Static(f"[bold green]Remaining Cells: [/bold green][bold]{self.remaining_cells}[/bold]{"\r\n"}[bold red]Errors: [/bold red][bold]{self.errors}[/bold]",id="status", classes="PlayText")
+            yield Static("", id="status", classes="PlayText")
             yield Static("Welcome to sudoku! Move the cells with wasd or the arrow keys. Input a digit with your keyboard. Have Fun!",id="how_to", classes="PlayText")
             yield Static(id="timer", classes="PlayText")
             yield Matrix(SUDOKU_SIZE, Mode.ACTIVE, id="play_matrix")
