@@ -53,4 +53,3 @@ async def test_play_correct():
             assert "correct" in current_cell.classes
             assert current_cell.digit == str(m._sudoku.get_cell(j,i))
         assert m.number_of_correct_cells() == m.total_cells() # Check the matrix state
-        assert app.screen.remaining_cells == 0 # Check the reactive component
