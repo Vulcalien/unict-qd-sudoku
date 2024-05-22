@@ -89,7 +89,11 @@ class Play(Screen):
             pass #TODO: Make something happen when the user completes the puzzle
 
     def update_status(self) -> None:
-        self.query_one("#status", Static).update(f"[bold green]Remaining Cells: [/bold green][bold]{self.remaining_cells}[/bold]{"\n"}[bold red]Errors: [/bold red][bold]{self.errors}[/bold]")
+        text =  "[bold green]Remaining Cells: [/bold green]" + \
+               f"[bold]{self.remaining_cells}[/bold]" + "\n" + \
+                "[bold red]Errors: [/bold red]"              + \
+               f"[bold]{self.errors}[/bold]"
+        self.query_one("#status", Static).update(text)
 
 
     @on(Matrix.Modified)
