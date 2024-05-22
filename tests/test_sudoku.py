@@ -14,9 +14,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import pytest
+from pytest_mock import MockerFixture
 
 from sudoku import generate_square_matrix
 from sudoku import Sudoku
+
+import copy
+import random
 
 @pytest.mark.parametrize("size, val", [
     (3, None),
@@ -273,3 +277,73 @@ def test_solve_grid(block_size: int, cells: list[list[int]],
     for y in range(block_size**2):
         for x in range(block_size**2):
             assert grid.cells[x][y] == expected[x][y]
+
+@pytest.mark.parametrize("block_size, cells, expected, expected_unique", [
+    (2, [
+        [1, 2, 3, 4],
+        [3, 4, 1, 2],
+        [2, 1, 4, 3],
+        [4, 3, 2, 1],
+    ], [
+        [None, 2, 3, 4],
+        [3,    4, 1, 2],
+        [2,    1, 4, 3],
+        [4,    3, 2, 1],
+    ], True),
+    (2, [
+        [None, None, 2,    None],
+        [None, 4,    1,    None],
+        [3,    1,    None, None],
+        [4,    2,    None, None],
+    ], [
+        [None, None, 2,    None],
+        [None, 4,    1,    None],
+        [None, 1,    None, None],
+        [4,    2,    None, None],
+    ], True),
+    (2, [
+        [None, None, 2,    None],
+        [None, 4,    1,    None],
+        [None, 1,    None, None],
+        [4,    2,    None, None],
+    ], [
+        [None, None, 2,    None],
+        [None, 4,    1,    None],
+        [None, 1,    None, None],
+        [None, 2,    None, None],
+    ], False),
+    (2, [
+        [None, None, None, None],
+        [None, None, None, None],
+        [None, None, None, None],
+        [None, None, None, None],
+    ], [
+        [None, None, None, None],
+        [None, None, None, None],
+        [None, None, None, None],
+        [None, None, None, None],
+    ], False)
+])
+def test_try_to_clear_random_cell(mocker: MockerFixture, block_size: int,
+                                  cells:    list[list[tuple[int, bool]]],
+                                  expected: list[list[tuple[int, bool]]],
+                                  expected_unique: bool):
+    grid = Sudoku(block_size)
+
+    for y in range(block_size**2):
+        for x in range(block_size**2):
+            grid.cells[x][y] = cells[x][y]
+            grid.fixed[x][y] = (cells[x][y] is not None)
+
+    mocker.patch.object(
+        random, 'sample',
+        return_value=range(block_size**2)
+    )
+
+    assert grid._Sudoku__try_to_clear_random_cell() == expected_unique
+
+    if expected_unique:
+        for y in range(block_size**2):
+            for x in range(block_size**2):
+                assert grid.cells[x][y] == expected[x][y]
+                assert grid.fixed[x][y] == (grid.cells[x][y] is not None)
