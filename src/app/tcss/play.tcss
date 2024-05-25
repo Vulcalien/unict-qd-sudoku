@@ -1,6 +1,7 @@
 #play_matrix {
-    align: center top;
     column-span: 3;
+    height: auto;
+    width: 1fr;
 }
 
 .PlayText {
@@ -16,6 +17,5 @@
 }
 
 Play Grid {
-    grid-size: 3 2;
-    grid-rows: 10% 1fr;
+    grid-size: 3;
 }

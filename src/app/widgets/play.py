@@ -18,7 +18,7 @@ from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.events import Click
 from textual.binding import Binding
-from textual.containers import Grid
+from textual.containers import Grid, Center, Middle
 from textual.widgets import Header, Footer, Static
 from textual.reactive import Reactive
 from variables import SUDOKU_SIZE
@@ -41,6 +41,7 @@ class Play(Screen):
             yield Static("", id="status", classes="PlayText")
             yield Static("Welcome to sudoku! Move the cells with wasd or the arrow keys. Input a digit with your keyboard. Have Fun!",id="how_to", classes="PlayText")
             yield Static(id="timer", classes="PlayText")
+        with Center():
             yield Matrix(SUDOKU_SIZE, Mode.ACTIVE, id="play_matrix")
         yield Header()
         yield Footer()
