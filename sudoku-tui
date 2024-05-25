@@ -1,3 +1,5 @@
 #!/bin/sh
 
-python3 "./src/app/app.py"
+PARENT_DIR=$(dirname $0)
+
+python3 "$PARENT_DIR/src/app/app.py"
