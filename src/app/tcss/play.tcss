@@ -1,10 +1,12 @@
 #play_matrix {
-    align: center top;
+    align: center middle;
+    content-align: center middle;
     column-span: 3;
+    margin: 0 50;
 }
 
 .PlayText {
-    width: 1fr;
+    width: auto;
     text-align: left;
     margin: 1;
 }
