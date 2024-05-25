@@ -1,3 +1,3 @@
 #!/bin/sh
 
-textual run "./src/app/app.py"
+python3 "./src/app/app.py"
