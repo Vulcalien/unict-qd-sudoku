@@ -13,7 +13,7 @@ command:
 pip install textual
 ```
 
-Then, run `./sudoku-tui` (on Unix-like systems) or `sudoku-tui` (on
+Then, run `./sudoku-tui` (on Unix-like systems) or `.\sudoku-tui` (on
 Windows).
 
 ## How to play
