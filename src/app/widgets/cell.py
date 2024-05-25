@@ -73,10 +73,10 @@ class Cell(Static):
         border: tall $secondary;
     }
     border: tall black;
-    width: auto;
-    height: auto;
+    width: 7;
+    height: 3;
     content-align: center middle;
-    padding: 0 2;
+    margin: 0;
     }"""
 
     def on_mount(self) -> None:

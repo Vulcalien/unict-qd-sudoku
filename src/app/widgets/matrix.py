@@ -45,7 +45,10 @@ class Matrix(Grid):
         padding: 0;
         margin: 0;
         overflow: auto auto;
-        grid-gutter: 0;
+        grid-gutter: 1;
+
+        max-width: 71;
+        max-height: 36;
      }
 """
      BINDINGS=[
