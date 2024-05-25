@@ -1,1 +1,1 @@
-textual run "./src/app/app.py"
+py "$PSScriptRoot\src\app\app.py"
