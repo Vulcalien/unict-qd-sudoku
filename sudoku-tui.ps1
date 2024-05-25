@@ -1,0 +1,1 @@
+textual run "./src/app/app.py"
