@@ -13,14 +13,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
 import pathlib
 import sys
 
 import pytest
 sys.path.append(str(pathlib.Path(__file__).parent.parent / "src" /"app")) #add the directory of the app
 from app.app import SudokuApp
-from widgets.play import Play
-from widgets.matrix import Matrix
+from widgets.play import Play # type: ignore
+from widgets.matrix import Matrix # type: ignore
 import logging
 
 LOGGER = logging.getLogger(__name__)
@@ -37,7 +38,13 @@ async def test_push_screen():
 @pytest.mark.asyncio
 async def test_play_correct():
     app=SudokuApp()
-    async with app.run_test(size=(1000,1000)) as pilot:
+    if os.name=="nt": #Checks if we are using Windows NT
+        width=210
+        height=55
+    else:
+        width=193
+        height=50
+    async with app.run_test(size=(width,height)) as pilot:
         await pilot.click("#playb")
         await pilot.pause()
         m : Matrix = app.screen.query_one("Matrix", Matrix)
@@ -45,8 +52,11 @@ async def test_play_correct():
         for current_cell in m._get_no_state_cells():
             i,j=m._extract_position(current_cell)
             logging.info(f"Current Cordinates: ({i=} {j=})")
-            assert i!=-1 and j!=-1 
-            await pilot.click(f".cell_{i}_{j}")
+            assert i!=-1 and j!=-1
+            if os.name=="nt":
+                await pilot.click(f".cell_{i}_{j}")
+            else: 
+                current_cell.focus()
             correct_answer=str(m._sudoku.get_cell(j,i))
             await pilot.press(correct_answer)
             await pilot.pause()
