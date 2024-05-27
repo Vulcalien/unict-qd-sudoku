@@ -21,9 +21,10 @@ from textual.binding import Binding
 from textual.containers import Grid, Center, Middle
 from textual.widgets import Header, Footer, Static
 from textual.reactive import Reactive
-from variables import SUDOKU_SIZE
-from sudoku import Sudoku
-from widgets.matrix import Matrix, Mode
+
+from src.sudoku import Sudoku
+from src.app.widgets.matrix import Matrix, Mode
+from src.app.variables import SUDOKU_SIZE
 
 class Play(Screen):
 

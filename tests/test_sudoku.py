@@ -16,8 +16,8 @@
 import pytest
 from pytest_mock import MockerFixture
 
-from sudoku import generate_square_matrix
-from sudoku import Sudoku
+from src.sudoku import generate_square_matrix
+from src.sudoku import Sudoku
 
 import copy
 import random

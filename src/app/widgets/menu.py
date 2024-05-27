@@ -13,13 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from textual import on, log
 from textual.app import ComposeResult
 from textual.containers import VerticalScroll
 from textual.widgets import Button, Footer, Header
 from textual.screen import Screen
-from textual import on
-from textual import log
-
 
 class Menu(Screen):
 

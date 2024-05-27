@@ -13,21 +13,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import pathlib
 import sys
-sys.path.append(str(pathlib.Path(__file__).parent.parent)) #Add directory above so the sudoku module can be imported
+
+from textual import on
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header
-from textual import on
 from textual.binding import Binding
-from widgets.menu import Menu
-from widgets.resolve import Resolve
-from widgets.play import Play
-from widgets.confirm_screen import QuitScreen, ClearScreen, RegenerateScreen
-from widgets.error_screen import ErrorScreen
 from textual.events import Click
 
-
+from src.app.widgets.menu import Menu
+from src.app.widgets.resolve import Resolve
+from src.app.widgets.play import Play
+from src.app.widgets.confirm_screen import QuitScreen, ClearScreen, RegenerateScreen
+from src.app.widgets.error_screen import ErrorScreen
 
 class SudokuApp(App):
 
@@ -67,10 +65,8 @@ class SudokuApp(App):
         yield Header()
         #yield Cell("9", id="testcell")
         #yield Matrix(3, id="matrix")
-    
 
-
-
-if __name__=="__main__":
+def main():
+    """main function called by a wrapper"""
     app = SudokuApp()
-    app.run() 
+    app.run()

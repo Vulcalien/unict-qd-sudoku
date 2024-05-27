@@ -19,10 +19,10 @@ from textual.screen import Screen
 from textual.widgets import Label, Header, Footer
 from textual.app import ComposeResult
 from textual.containers import Vertical, Center
-from widgets.matrix import Mode, Matrix
-from variables import SUDOKU_SIZE
 from textual.events import Click
 
+from src.app.widgets.matrix import Mode, Matrix
+from src.app.variables import SUDOKU_SIZE
 
 SUDOKU_TEXT : str = """Welcome to Sudoku solve mode!
 Use wasd or the arrrow keys to move around.

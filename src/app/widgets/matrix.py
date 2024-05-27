@@ -14,18 +14,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from enum import Enum, auto
-from widgets.cell import Cell
-
-from textual.message import Message
-from textual import log
-from textual import on
-from textual.app import ComposeResult
-from textual.binding import Binding
-from textual.containers import Grid
-from textual.widget import Widget
 from typing import Iterable, List
-from sudoku import Sudoku
 
+from textual import on, log
+from textual.app import ComposeResult
+from textual.widget import Widget
+from textual.containers import Grid
+from textual.binding import Binding
+from textual.message import Message
+
+from src.sudoku import Sudoku
+from src.app.widgets.cell import Cell
 
 class Mode(Enum):
      """Indicates the current sudoku mode being used.

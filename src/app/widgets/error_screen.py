@@ -13,11 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from textual import on
+from textual.app import ComposeResult
 from textual.screen import ModalScreen
 from textual.widgets import Button, Label
 from textual.containers import VerticalScroll
-from textual.app import ComposeResult
-from textual import on
 
 ERROR_MESSAGE="""The sudoku grid you inserted does not have an unique solution."""
 

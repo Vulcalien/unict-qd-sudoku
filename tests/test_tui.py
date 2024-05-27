@@ -14,15 +14,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
-import pathlib
 import sys
 
 import pytest
-sys.path.append(str(pathlib.Path(__file__).parent.parent / "src" /"app")) #add the directory of the app
-from app.app import SudokuApp
-from widgets.play import Play # type: ignore
-from widgets.matrix import Matrix # type: ignore
 import logging
+
+from src.app.app import SudokuApp
+from src.app.widgets.play import Play # type: ignore
+from src.app.widgets.matrix import Matrix # type: ignore
 
 LOGGER = logging.getLogger(__name__)
 

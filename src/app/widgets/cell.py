@@ -13,12 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from rich.console import ConsoleRenderable, RichCast
 from textual import on
 from textual.events import Click, Key
 from textual.message import Message
 from textual.reactive import Reactive
 from textual.widgets import Static
+
+from rich.console import ConsoleRenderable, RichCast
 
 class Cell(Static):
 
