@@ -48,7 +48,8 @@ class Matrix(Grid):
         max-width: 71;
         max-height: 36;
     }
-"""
+    """
+
     BINDINGS=[
         Binding("w,up", "go_up", "Go one cell above", show=False),
         Binding("s,down", "go_down", "Go one cell below", show=False),

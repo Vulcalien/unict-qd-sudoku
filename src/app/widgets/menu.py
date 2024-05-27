@@ -22,39 +22,36 @@ from textual.screen import Screen
 class Menu(Screen):
 
     DEFAULT_CSS="""
-    VerticalScroll Button
-    {
+    VerticalScroll Button {
         margin:1;
         width: 50%;
         height: auto;
         color: $text;
     }
-    VerticalScroll
-    {
-    align: center middle;
+
+    VerticalScroll {
+        align: center middle;
     }
-    #resolveb
-    {
+
+    #resolveb {
         display: none;
     }
     """
 
-
     def compose(self) -> ComposeResult:
-            yield VerticalScroll(
+        yield VerticalScroll(
             Button("Play", id="playb", variant="primary"),
             Button("Solve", id="resolveb", variant="default", disabled=True),
             id="menu"
         )
-            yield Footer()
-            yield Header()
-    
-    @on (Button.Pressed, "#resolveb")
+        yield Footer()
+        yield Header()
+
+    @on(Button.Pressed, "#resolveb")
     def resolve(self, event : Button.Pressed) -> None:
         log.debug("Resolve sudoku mode selected!")
         self.app.push_screen("resolve")
 
-    @on (Button.Pressed, "#playb")
+    @on(Button.Pressed, "#playb")
     def play(self, event : Button.Pressed) -> None:
         self.app.push_screen("play")
-    
