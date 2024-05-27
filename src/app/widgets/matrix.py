@@ -82,7 +82,7 @@ class Matrix(Grid):
         self._sudoku=sudoku
         # Note: the Sudoku class seems to use Column Major order, so we
         # will have to retrieve the elements that way
-        if(self.mode is Mode.ACTIVE):
+        if self.mode is Mode.ACTIVE:
             self._load([[str(self._sudoku.get_cell(x,y)) if (self._sudoku.is_fixed(x,y)) else " " for x in range(self.line_size)] for y in range(self.line_size)])
         else:
             self._load([[str(self._sudoku.get_cell(x,y)) for x in range(self.line_size)] for y in range(self.line_size)])
@@ -125,9 +125,9 @@ class Matrix(Grid):
 
     def _extract_position(self, cell : Cell) -> tuple[int, int]:
         """Extracts x and y coordinates from a cell"""
-        if(cell.classes is not None):
+        if cell.classes is not None:
             for s in cell.classes: # type: ignore
-                if("cell" in s):
+                if "cell" in s:
                     s = s.split("_")
                     return (int(s[1]), int(s[2]))
         # TODO: Add proper exception handling
@@ -150,10 +150,10 @@ class Matrix(Grid):
           was deleted"""
         log.debug(self.to_list())
         modif_cell=self.query_one("." + modified.css_class, Cell)
-        if(self.mode is Mode.STATIC):
+        if self.mode is Mode.STATIC:
             return
         log.debug(self._sudoku)
-        if(modif_cell.digit == " "):
+        if modif_cell.digit == " ":
             modif_cell.remove_class("error", update=True)
             modif_cell.add_class("no_state", update=True)
             self.post_message(self.Modified(modif_cell))
@@ -161,7 +161,7 @@ class Matrix(Grid):
         x, y = self._extract_position(modif_cell)
         # Note: the modif_cell.has_class("correct")==True case is
         # skipped because it is handled by the cell class itself
-        if(self._is_correct(x,y)):
+        if self._is_correct(x,y):
             modif_cell.add_class("correct", update=True)
             modif_cell.remove_class("error", update=True)
             modif_cell.remove_class("no_state", update=True)
@@ -180,7 +180,7 @@ class Matrix(Grid):
     def move_forward(self, cell : Cell) -> None:
         x, y = self._extract_position(cell)
         y = (y + 1) % self.line_size
-        if(y == 0):
+        if y == 0:
             x = (x + 1) % self.line_size
         self.move_to(x, y)
 
@@ -222,7 +222,7 @@ class Matrix(Grid):
             for y in range(self.line_size):
                 cell=self.query_cell(x,y)
                 cell.digit=matrix[x][y]
-                if(self.mode is Mode.ACTIVE and cell.digit!=" "):
+                if self.mode is Mode.ACTIVE and cell.digit != " ":
                     cell.add_class(*class_str, update=True)
                 else:
                     cell.add_class("no_state", update=True)
