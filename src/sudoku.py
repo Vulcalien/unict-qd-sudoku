@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+"""Module for randomly generating a Sudoku grid"""
+
 import random
 
 def generate_square_matrix(size: int, val: any) -> list[list[int]]:
@@ -20,11 +22,12 @@ def generate_square_matrix(size: int, val: any) -> list[list[int]]:
     matrix = []
     for i in range(size):
         matrix.append([])
-        for j in range(size):
+        for _ in range(size):
             matrix[i].append(val)
     return matrix
 
 class Sudoku:
+    """Class representing the the Sudoku grid"""
 
     def __init__(self, block_size: int):
         self.block_size = block_size
@@ -165,10 +168,12 @@ class Sudoku:
         return False
 
     def generate_grid(self, iterations: int) -> int:
+        """generate a full grid"""
+
         self.__fill_grid(0, 0)
 
         count = 0
-        for i in range(iterations):
+        for _ in range(iterations):
             if self.__try_to_clear_random_cell():
                 count += 1
 
@@ -236,7 +241,7 @@ class Sudoku:
             for x in range(self.size):
                 symbol = self.cells[x][y]
 
-                if symbol == None:
+                if symbol is None:
                     result += ' _ '
                 elif self.fixed[x][y]:
                     result += '[' + str(symbol) + ']'
