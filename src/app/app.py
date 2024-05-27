@@ -34,29 +34,26 @@ class SudokuApp(App):
     BINDINGS = [Binding("ctrl+z", "suspend_process")]
 
     SCREENS = {
-        "menu" : Menu(classes="SudokuScreen"), 
-        "play" : Play(classes="SudokuScreen"), 
+        "menu" : Menu(classes="SudokuScreen"),
+        "play" : Play(classes="SudokuScreen"),
         "resolve" : Resolve(classes="SudokuScreen"),
         "quit_screen" : QuitScreen(),
         "clear_screen" : ClearScreen(),
         "error_screen" : ErrorScreen(),
         "regenerate_screen" : RegenerateScreen()
-        }
+    }
 
     def on_mount(self) -> None:
         self.push_screen(Menu(classes="SudokuScreen"))
         #self.screen.styles.background="background-darken-3"
         #self.screen.styles.border= ("round", "background-lighten-3")
-    
 
     @on(Click)
     def clicked(self):
         cells=self.query("Cell")
         for cell in cells:
-            if(cell.has_focus):
+            if cell.has_focus:
                 cell.blur()
-    
-
 
     def compose(self) -> ComposeResult:
         yield Footer()

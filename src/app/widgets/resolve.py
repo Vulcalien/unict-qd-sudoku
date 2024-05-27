@@ -71,14 +71,14 @@ class Resolve(Screen):
     def compose(self) -> ComposeResult:
         with Vertical():
             with Center():
-                yield(Label(SUDOKU_TEXT))
+                yield Label(SUDOKU_TEXT)
             yield Matrix(SUDOKU_SIZE, Mode.STATIC)
         yield Header()
         yield Footer()
 
     def action_main_menu(self) -> None:
         def clean_up(execute: bool) -> None:
-            if(execute):
+            if execute:
                 m = self.query_one("Matrix", Matrix)
                 m.set_mode_and_clear(Mode.STATIC)
                 self.app.pop_screen()

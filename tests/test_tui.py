@@ -14,9 +14,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+import logging
 
 import pytest
-import logging
 
 from src.app.app import SudokuApp
 from src.app.widgets.play import Play # type: ignore
@@ -31,7 +31,6 @@ async def test_push_screen():
         await pilot.click("#playb")
         await pilot.pause()
         assert isinstance(app.screen, Play)
-
 
 @pytest.mark.asyncio
 async def test_play_correct():
@@ -53,7 +52,7 @@ async def test_play_correct():
             assert i!=-1 and j!=-1
             if os.name=="nt":
                 await pilot.click(f".cell_{i}_{j}")
-            else: 
+            else:
                 current_cell.focus()
             correct_answer=str(m._sudoku.get_cell(j,i))
             await pilot.press(correct_answer)
