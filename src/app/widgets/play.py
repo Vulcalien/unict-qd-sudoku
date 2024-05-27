@@ -57,7 +57,7 @@ class Play(Screen):
 
     def action_main_menu(self) -> None:
         def clean_up(execute: bool) -> None:
-            if(execute):
+            if execute:
                 m=self.query_one("Matrix", Matrix)
                 self.gen_and_load()
                 self.app.pop_screen()
@@ -66,7 +66,7 @@ class Play(Screen):
 
     def action_regenerate(self) -> None:
         def regen(execute: bool) -> None:
-            if(execute):
+            if execute:
                 self.gen_and_load()
         self.app.push_screen("regenerate_screen", regen)
 
@@ -75,8 +75,8 @@ class Play(Screen):
 
     def watch_remaining_cells(self) -> None:
         self.update_status()
-        if(self.remaining_cells==0):
-            pass #TODO: Make something happen when the user completes the puzzle
+        if self.remaining_cells == 0:
+            pass # TODO: Make something happen when the user completes the puzzle
 
     def update_status(self) -> None:
         text =  "[bold green]Remaining Cells: [/bold green]" + \

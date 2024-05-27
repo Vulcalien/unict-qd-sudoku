@@ -49,7 +49,7 @@ class Cell(Static):
         if character > "9" or character < "1":
             return " "
         return character
-     
+
     DEFAULT_CSS="""
     Cell {
         background: $background-darken-3;

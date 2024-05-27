@@ -1,2 +1,7 @@
 [MAIN]
+
 source-roots = .
+
+disable = missing-function-docstring,
+          missing-class-docstring,
+          missing-module-docstring

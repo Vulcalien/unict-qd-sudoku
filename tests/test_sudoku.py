@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+"""Test the 'sudoku' module and its 'Sudoku' class"""
+
 import random
 
 import pytest
@@ -59,8 +61,8 @@ def test_sudoku_init(block_size: int, expected_size: int):
     # check that no cell has a value or is fixed
     for y in range(grid.size):
         for x in range(grid.size):
-            assert grid.cells[x][y] == None
-            assert grid.fixed[x][y] == False
+            assert grid.cells[x][y] is None
+            assert grid.fixed[x][y] is False
 
 @pytest.mark.parametrize("block_size", [
     1, 2, 3, 4, 9
@@ -173,7 +175,7 @@ def test_can_set_2(block_size: int, fix: tuple[int, int, int],
     fix_x, fix_y, fix_symbol = fix
     x, y, symbol = to_place
 
-    assert grid._Sudoku__set_fixed(fix_x, fix_y, fix_symbol) == True
+    assert grid._Sudoku__set_fixed(fix_x, fix_y, fix_symbol) is True
     assert grid._Sudoku__can_set(x, y, symbol) == expected
 
 @pytest.mark.parametrize("block_size, x, y, next_x, next_y, is_inside", [
@@ -344,7 +346,7 @@ def test_try_to_clear_random_cell(mocker: MockerFixture, block_size: int,
     for y in range(block_size**2):
         for x in range(block_size**2):
             grid.cells[x][y] = cells[x][y]
-            grid.fixed[x][y] = (cells[x][y] is not None)
+            grid.fixed[x][y] = cells[x][y] is not None
 
     mocker.patch.object(
         random, 'sample',
