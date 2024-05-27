@@ -13,21 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import pathlib
-import sys
-sys.path.append(str(pathlib.Path(__file__).parent.parent)) #Add directory above so the sudoku module can be imported
+from textual import on
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header
-from textual import on
 from textual.binding import Binding
-from widgets.menu import Menu
-from widgets.resolve import Resolve
-from widgets.play import Play
-from widgets.confirm_screen import QuitScreen, ClearScreen, RegenerateScreen
-from widgets.error_screen import ErrorScreen
 from textual.events import Click
 
-
+from src.app.widgets.menu import Menu
+from src.app.widgets.resolve import Resolve
+from src.app.widgets.play import Play
+from src.app.widgets.confirm_screen import QuitScreen, ClearScreen, RegenerateScreen
+from src.app.widgets.error_screen import ErrorScreen
 
 class SudokuApp(App):
 
@@ -38,39 +34,34 @@ class SudokuApp(App):
     BINDINGS = [Binding("ctrl+z", "suspend_process")]
 
     SCREENS = {
-        "menu" : Menu(classes="SudokuScreen"), 
-        "play" : Play(classes="SudokuScreen"), 
+        "menu" : Menu(classes="SudokuScreen"),
+        "play" : Play(classes="SudokuScreen"),
         "resolve" : Resolve(classes="SudokuScreen"),
         "quit_screen" : QuitScreen(),
         "clear_screen" : ClearScreen(),
         "error_screen" : ErrorScreen(),
         "regenerate_screen" : RegenerateScreen()
-        }
+    }
 
     def on_mount(self) -> None:
         self.push_screen(Menu(classes="SudokuScreen"))
         #self.screen.styles.background="background-darken-3"
         #self.screen.styles.border= ("round", "background-lighten-3")
-    
 
     @on(Click)
     def clicked(self):
         cells=self.query("Cell")
         for cell in cells:
-            if(cell.has_focus):
+            if cell.has_focus:
                 cell.blur()
-    
-
 
     def compose(self) -> ComposeResult:
         yield Footer()
         yield Header()
         #yield Cell("9", id="testcell")
         #yield Matrix(3, id="matrix")
-    
 
-
-
-if __name__=="__main__":
+def main():
+    """main function called by a wrapper"""
     app = SudokuApp()
-    app.run() 
+    app.run()

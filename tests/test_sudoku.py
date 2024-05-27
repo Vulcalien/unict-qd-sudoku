@@ -13,14 +13,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+"""Test the 'sudoku' module and its 'Sudoku' class"""
+
+import random
+
 import pytest
 from pytest_mock import MockerFixture
 
-from sudoku import generate_square_matrix
-from sudoku import Sudoku
-
-import copy
-import random
+from src.sudoku import generate_square_matrix
+from src.sudoku import Sudoku
 
 @pytest.mark.parametrize("size, val", [
     (3, None),
@@ -30,6 +31,7 @@ import random
     (2, 'f')
 ])
 def test_generate_square_matrix(size: int, val: any):
+    """test 'generate_square_matrix'"""
     matrix = generate_square_matrix(size, val)
 
     # check that the size is correct
@@ -50,6 +52,7 @@ def test_generate_square_matrix(size: int, val: any):
     (9, 81)
 ])
 def test_sudoku_init(block_size: int, expected_size: int):
+    """test 'Sudoku' constructor"""
     grid = Sudoku(block_size)
 
     assert grid.block_size == block_size
@@ -58,13 +61,14 @@ def test_sudoku_init(block_size: int, expected_size: int):
     # check that no cell has a value or is fixed
     for y in range(grid.size):
         for x in range(grid.size):
-            assert grid.cells[x][y] == None
-            assert grid.fixed[x][y] == False
+            assert grid.cells[x][y] is None
+            assert grid.fixed[x][y] is False
 
 @pytest.mark.parametrize("block_size", [
     1, 2, 3, 4, 9
 ])
 def test_get_symbols(block_size: int):
+    """test 'grid.get_symbols'"""
     grid = Sudoku(block_size)
 
     assert grid.get_symbols() == range(1, block_size * block_size + 1)
@@ -82,6 +86,7 @@ def test_get_symbols(block_size: int):
     (3, 4, 9, None),
 ])
 def test_get_cell(block_size: int, x: int, y: int, val: int):
+    """test 'get_cell'"""
     grid = Sudoku(block_size)
 
     if x >= 0 and x < block_size**2 and y >= 0 and y < block_size**2:
@@ -103,6 +108,7 @@ def test_get_cell(block_size: int, x: int, y: int, val: int):
     (3, 0, 9, False),
 ])
 def test_is_fixed(block_size: int, x: int, y: int, val: bool):
+    """test 'is_fixed'"""
     grid = Sudoku(block_size)
 
     if x >= 0 and x < block_size**2 and y >= 0 and y < block_size**2:
@@ -130,6 +136,7 @@ def test_is_fixed(block_size: int, x: int, y: int, val: bool):
     (3, (8, 4, 3), True)
 ])
 def test_can_set_1(block_size: int, to_place: tuple[int, int, int], expected: bool):
+    """test 'can_set'"""
     grid = Sudoku(block_size)
     x, y, symbol = to_place
 
@@ -163,11 +170,12 @@ def test_can_set_1(block_size: int, to_place: tuple[int, int, int], expected: bo
 ])
 def test_can_set_2(block_size: int, fix: tuple[int, int, int],
                    to_place: [int, int, int], expected: bool):
+    """test 'can_set'"""
     grid = Sudoku(block_size)
     fix_x, fix_y, fix_symbol = fix
     x, y, symbol = to_place
 
-    assert grid._Sudoku__set_fixed(fix_x, fix_y, fix_symbol) == True
+    assert grid._Sudoku__set_fixed(fix_x, fix_y, fix_symbol) is True
     assert grid._Sudoku__can_set(x, y, symbol) == expected
 
 @pytest.mark.parametrize("block_size, x, y, next_x, next_y, is_inside", [
@@ -179,6 +187,7 @@ def test_can_set_2(block_size: int, fix: tuple[int, int, int],
 ])
 def test_get_next_cell_coordinates(block_size: int, x: int, y: int,
                                    next_x: int, next_y: int, is_inside: bool):
+    """test 'get_next_cell_coordinates'"""
     grid = Sudoku(block_size)
 
     returned_x, returned_y = grid._Sudoku__get_next_cell_coordinates(x, y)
@@ -215,6 +224,7 @@ def test_get_next_cell_coordinates(block_size: int, x: int, y: int,
 ])
 def test_repr(block_size: int, cell: tuple[int, int, int],
               fixed: tuple[int, int, int], expected_str: str):
+    """test '__repr__'"""
     grid = Sudoku(block_size)
 
     grid._Sudoku__set_cell(cell[0], cell[1], cell[2])
@@ -243,6 +253,7 @@ def test_repr(block_size: int, cell: tuple[int, int, int],
 ])
 def test_has_unique_solution(block_size: int, cells: list[list[int]],
                              expected: bool):
+    """test 'has_unique_solution'"""
     grid = Sudoku(block_size)
 
     for y in range(block_size**2):
@@ -266,6 +277,7 @@ def test_has_unique_solution(block_size: int, cells: list[list[int]],
 ])
 def test_solve_grid(block_size: int, cells: list[list[int]],
                     expected: list[list[int]]):
+    """test 'solve_grid'"""
     grid = Sudoku(block_size)
 
     for y in range(block_size**2):
@@ -328,12 +340,13 @@ def test_try_to_clear_random_cell(mocker: MockerFixture, block_size: int,
                                   cells:    list[list[tuple[int, bool]]],
                                   expected: list[list[tuple[int, bool]]],
                                   expected_unique: bool):
+    """test 'try_to_clear_random_cell'"""
     grid = Sudoku(block_size)
 
     for y in range(block_size**2):
         for x in range(block_size**2):
             grid.cells[x][y] = cells[x][y]
-            grid.fixed[x][y] = (cells[x][y] is not None)
+            grid.fixed[x][y] = cells[x][y] is not None
 
     mocker.patch.object(
         random, 'sample',
@@ -356,6 +369,7 @@ def test_try_to_clear_random_cell(mocker: MockerFixture, block_size: int,
 ])
 def test_generate_grid(mocker: MockerFixture, block_size: int,
                        iterations: int):
+    """test 'generate_grid'"""
     grid = Sudoku(block_size)
 
     mocker.patch.object(

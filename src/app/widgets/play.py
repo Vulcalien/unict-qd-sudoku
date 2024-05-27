@@ -21,17 +21,15 @@ from textual.binding import Binding
 from textual.containers import Grid, Center, Middle
 from textual.widgets import Header, Footer, Static
 from textual.reactive import Reactive
-from variables import SUDOKU_SIZE
-from sudoku import Sudoku
-from widgets.matrix import Matrix, Mode
+
+from src.sudoku import Sudoku
+from src.app.widgets.matrix import Matrix, Mode
+from src.app.variables import SUDOKU_SIZE
 
 class Play(Screen):
 
-    
     remaining_cells : Reactive[int]=Reactive(0)
     errors : Reactive[int]=Reactive(0)
-
-
 
     BINDINGS=[Binding("q,escape", "main_menu", "Go back to main menu", show=True),
               Binding("r", "regenerate", "Regenerate puzzle", show=True)]
@@ -46,7 +44,6 @@ class Play(Screen):
         yield Header()
         yield Footer()
 
-
     def gen_and_load(self) -> None:
         sudoku : Sudoku = Sudoku(SUDOKU_SIZE)
         sudoku.generate_grid(65)
@@ -54,40 +51,32 @@ class Play(Screen):
         m.clear_and_load(Mode.ACTIVE, sudoku)
         self.errors=0
         self.remaining_cells=SUDOKU_SIZE**4-m.number_of_hints()
-        
 
     def on_mount(self) -> None:
         self.gen_and_load()
 
-
     def action_main_menu(self) -> None:
         def clean_up(execute: bool) -> None:
-                if(execute):
-                    m=self.query_one("Matrix", Matrix)
-                    self.gen_and_load()
-                    self.app.pop_screen()
-                    m.query_cell(0,0).focus()
-                    
+            if execute:
+                m=self.query_one("Matrix", Matrix)
+                self.gen_and_load()
+                self.app.pop_screen()
+                m.query_cell(0,0).focus()
         self.app.push_screen("quit_screen", clean_up)
 
-    
     def action_regenerate(self) -> None:
-            def regen(execute: bool) -> None:
-                if(execute):
-                    self.gen_and_load()
-
-
-            self.app.push_screen("regenerate_screen", regen)
-
+        def regen(execute: bool) -> None:
+            if execute:
+                self.gen_and_load()
+        self.app.push_screen("regenerate_screen", regen)
 
     def watch_errors(self) -> None:
         self.update_status()
 
-
     def watch_remaining_cells(self) -> None:
         self.update_status()
-        if(self.remaining_cells==0):
-            pass #TODO: Make something happen when the user completes the puzzle
+        if self.remaining_cells == 0:
+            pass # TODO: Make something happen when the user completes the puzzle
 
     def update_status(self) -> None:
         text =  "[bold green]Remaining Cells: [/bold green]" + \
@@ -96,7 +85,6 @@ class Play(Screen):
                f"[bold]{self.errors}[/bold]"
         self.query_one("#status", Static).update(text)
 
-
     @on(Matrix.Modified)
     def modified_matrix(self, modified : Matrix.Modified) -> None:
         cell=modified.cell
@@ -104,9 +92,9 @@ class Play(Screen):
             self.errors+=1
         elif cell.has_class("correct"):
             self.remaining_cells-=1
-    
 
-    #Seems the only way to make sure clicking on the grid doesn't focus the previous cell
+    # Seems the only way to make sure clicking on the grid doesn't focus
+    # the previous cell
     @on(Click)
     def noOP(self, event : Click):
         event.stop()

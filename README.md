@@ -13,8 +13,7 @@ command:
 pip install textual
 ```
 
-Then, run `./sudoku-tui` (on Unix-like systems) or `.\sudoku-tui` (on
-Windows).
+Then, run `python3 sudoku-tui.py` to start the game.
 
 ## How to play
 After starting the game, press 'Play' to generate a new puzzle. This may

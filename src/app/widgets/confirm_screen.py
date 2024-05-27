@@ -13,12 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
 from textual.screen import ModalScreen
 from textual.widgets import Button, Label
 from textual.app import ComposeResult
 from textual.containers import Grid
-
 
 class ConfirmScreen(ModalScreen[bool]):  
     """Screen with a dialog to confirm an action."""
